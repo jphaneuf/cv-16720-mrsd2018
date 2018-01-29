@@ -6,8 +6,8 @@ function [Im Io Ix Iy] = myEdgeFilter(img, sigma)
   %%Create filters%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
   filter_size     = 2 * ceil(3*sigma) + 1;
   gaussian_filter = fspecial('gaussian',filter_size,sigma);
-  sobel_filter_x  = fspecial('sobel');
-  sobel_filter_y  = sobel_filter_x';
+  sobel_filter_y  = fspecial('sobel');
+  sobel_filter_x  = sobel_filter_y';
 
   %%Apply filters%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
   img_blurred = myImageFilter( img         , gaussian_filter );
