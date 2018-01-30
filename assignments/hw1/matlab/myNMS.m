@@ -9,65 +9,46 @@ function [img_out] = myNMS(Im, Io)
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
   %Io = im2double(Io);
   %%round Io to nearest 45 degrees%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
-  E = [0 0 0 ; 1 0 1; 0 0 0];
-  N = E';
-  NE =[0 0 1; 0 0 0; 1 0 0];
-  NW = flip(NE);
   pad_by = 1;
-  filters = [E ; NE ; N ; NW];
   Ior = wrapToPi(Io);
   Ior(find(Ior < 0)) = pi + Ior(find(Ior < 0));
   Ior = round(Ior*4/pi);
   Ior(find(Ior == 4)) = 0;
   Ior(isnan(Ior))=0;
+  O = Ior +1 %+1 for indexing stupid
+  %neighbor offsets relative to center pixel, based on gradient
+  % orientation index  : 1   2   3   4
+  % degrees            : 0  45  90  135
+  gno_x1             = [-1  -1   0   1];
+  gno_x2             = [ 1   1   0   1];
+  gno_y1             = [ 0  -1  -1   1];
+  gno_y2             = [ 0   1   1  -1];
 
   %%Determine image and filter sizes %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   [img_height img_width] = size(Im);
   img_out = zeros(img_height,img_width);
   Im = padarray(Im,[pad_by pad_by],'symmetric','both');
+  O = padarray(O,[pad_by pad_by],'symmetric','both');
 
   %%Iterate on all pixels %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   vector_length = img_height * img_width;
   for i=0:vector_length-1;
     x = mod   (i , img_width  ) + 1;
     y = floor (i / img_width ) + 1;
-    img_slice_vector = single(reshape(Im(y:y+2*pad_by,x:x+2*pad_by),1,[]));
-    %{
-      1
-        get vector
-        index
-
-gradient_neighbor_indices = 
-
-   x  y
-0  +  0
-0  -  0 
-1  +  + 
-1  -  -
-2  0  +
-2  0  -
-3  +  - 
-3  -  +
-   [xa xb ya yb] = data(Ior(y,x),)     
-    %}
-    filter = filters(3*Ior(y,x)+(1:3),:);
-    filter  = reshape(filter,1,[]) ;
-    if pixelvalue > dotproduct:
-      img_out(y,x) = dot(img_slice_vector,filter);
-    else:
-      clear pixelvalue
-      img_out(y,x) = dot(img_slice_vector,filter);
+    %%Track indices for padded images:
+    xp = x+pad_by;
+    yp = y+pad_by;
+    center_pixel = Im(yp,xp);
+    dx1 = gno_x1(O(yp,xp));
+    dx2 = gno_x2(O(yp,xp));
+    dy1 = gno_y1(O(yp,xp));
+    dy2 = gno_y2(O(yp,xp));
+    neighbor_1 = Im(yp+dy1,xp+dx1);
+    neighbor_2 = Im(yp+dy2,xp+dx2);
+    if center_pixel > neighbor_1 && center_pixel > neighbor_2
+      img_out(y,x) = Im(yp,xp);
+    end
   end
-  img_out;
 end
 
-
-%archive
-%{
-[filter_height filter_width] = size(h);
-assert(filter_height == filter_width , "That filter is not symmetric bruh");
-img = Ior;
-pad_by = floor(filter_height/2);
-h_vector = reshape(h,1,[]);
-%}
 
