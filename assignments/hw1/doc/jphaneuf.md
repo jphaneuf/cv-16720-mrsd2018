@@ -1,3 +1,6 @@
+# Computer Vision 16-720 Spring 2018
+# Joe Phaneuf
+
 # 2 Theory Questions  
 
 ## Q2.1  
@@ -21,9 +24,16 @@ $y = - \frac{1}{tan \theta} x + \frac{\rho}{sin \theta}$
 $m =- \frac{1}{tan \theta}$ , $c = \frac{\rho}{sin \theta}$  
 
 ## Q2.3  
-The range of $\theta$ is independent on image size: $0 \leq \theta \leq \frac{\pi}/{2}$  
+The range of $\theta$ is independent on image size: $- \frac{\pi}{2} \leq \theta \leq \frac{\pi}{2}$  
+The largest $\rho$ will be a diagonal across the image space: $0 \leq abs(\rho) \leq \sqrt{W^{2} + H^{2}}$
 
 ## Q2.4  
+### Matlab script for plot generation in matlab/q2_4.m
+Image space points (10, 10), (15, 15) and (30, 30) were represented in Hough space, resulting in sinusoids as discussed above. The sinusoids in Hough space intersect at one point. That point describes a line in image space that passes through the points (10, 10), (15, 15) and (30, 30). The sinusoids intersect at $\theta = - \frac{pi}{4}$ , $\rho = 0$, which describes a 45 degree line passing through origin in image space, i.e. $m=1$, $c=0$.
+
+![Intersecting lines in Hough space](./doc/img/q2_4.png)  
+
+
 ## Q2.5  
 Extra Credit
 
