@@ -1,7 +1,6 @@
 clear;
 
 datadir     = '../data';    %the directory containing the images
-%resultsdir  = '../results'; %the directory for dumping results
 resultsdir = strcat('../results_',datestr(now,'ddmmmmyyyy_HH_MM_SS'))
 param_file = strcat(resultsdir,'/params.txt')
 mkdir(resultsdir)
@@ -9,19 +8,19 @@ mkdir(resultsdir)
 %parameters
 sigma     = 2;
 threshold = 0.03;
-threshold = 0.5;
 rhoRes    = 2;
 thetaRes  = pi/90;
-thetaRes  = 1;
 nLines    = 50;
 %end of parameters
 
 fd = fopen(param_file,'w');
-fprintf(fd, 'sigma: %f \nthreshold: %f \nthreshold: %f \nrhoRes: %f \nthetaRes: %f \nthetaRes: %f\nnLines: %f', sigma, threshold, threshold, rhoRes, thetaRes, thetaRes, nLines)
+fprintf(fd, 'sigma: %f\n', sigma)
+fprintf(fd, 'threshold: %f\n', threshold)
+fprintf(fd, 'rhoRes: %f\n', rhoRes)
+fprintf(fd, 'thetaRes: %f\n', thetaRes)
+fprintf(fd, 'nLines: %f\n', nLines)
 
 
-
-return
 imglist = dir(sprintf('%s/*.jpg', datadir));
 
 for i = 1:numel(imglist)
