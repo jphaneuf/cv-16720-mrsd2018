@@ -14,15 +14,11 @@ function [Im Io Ix Iy] = myEdgeFilter(img, sigma)
   Ix          = myImageFilter( img_blurred , sobel_filter_x  );
   Iy          = myImageFilter( img_blurred , sobel_filter_y  );
 
-  %nms
   %%Generate image magnitude%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
   Im = sqrt(Ix.^2 + Iy.^2);
   Io = atan(Iy./Ix);
-  Im;
-  Io;
-  Ix;
-  Iy;
-  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+  %%Non maximal supression on Im%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+  Im = myNMS(Im, Io);
 end
     
                 

@@ -19,7 +19,7 @@ function [rhos, thetas] = myHoughLines(H, nLines)
     center_pixel = H(yp,xp);
     neighbors = H( (yp-1):(yp+1) , (xp-1):(xp+1) );
     neighbors(5) = 0;
-    if all(all(center_pixel > neighbors))
+    if all(all(center_pixel > neighbors));
       Hnms(y,x) = H(yp,xp);
     end
   end

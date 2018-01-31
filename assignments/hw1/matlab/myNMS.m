@@ -45,7 +45,7 @@ function [img_out] = myNMS(Im, Io)
     dy2 = gno_y2(O(yp,xp));
     neighbor_1 = Im(yp+dy1,xp+dx1);
     neighbor_2 = Im(yp+dy2,xp+dx2);
-    if center_pixel > neighbor_1 && center_pixel > neighbor_2
+    if center_pixel > neighbor_1 && center_pixel > neighbor_2;
       img_out(y,x) = Im(yp,xp);
     end
   end

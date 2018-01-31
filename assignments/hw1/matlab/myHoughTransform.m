@@ -10,7 +10,6 @@ function [H, rhoScale, thetaScale] = myHoughTransform(Im, threshold, rhoRes, the
   %thetaScale = deg2rad(0:thetaRes:180);
   %Compared against matlab hough, which appears to use -90 to 90 degree sweep
   thetaScale = deg2rad(-90:thetaRes:90);
-  length(thetaScale)
   rhoMax = sqrt(img_height^2 + img_width^2);
   rhoScale = 0:rhoRes:sqrt(img_height^2 + img_width^2);
   rhoScale = -rhoMax:rhoRes:rhoMax;
