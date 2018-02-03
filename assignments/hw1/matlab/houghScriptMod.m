@@ -6,11 +6,11 @@ param_file = strcat(resultsdir,'/params.txt')
 mkdir(resultsdir)
 
 %parameters
-sigma     = 3;
-threshold = 0.1;
-rhoRes    = 1;
+sigma     = 0.5;
+threshold = 0.75;
+rhoRes    = 0.5;
 thetaRes  = 0.5;
-nLines    = 50;
+nLines    = 100;
 %end of parameters
 
 fd = fopen(param_file,'w');
