@@ -31,6 +31,7 @@ Mapping a point in image space $(x,y)$ to Hough space, $x$ and $y$ become consta
 $\rho(\theta) = x cos \theta + y sin \theta$  
 Being a linear combination of same-period sinusoids, $\rho(\theta)$ is guaranteed to be a sinusoid.  
 
+\newpage
 \subsection{}
 Hough space can be parameterized in slope-intercept form.  
 Doing so creates two major problems:  
@@ -46,10 +47,12 @@ $y sin \theta = \rho - x cos \theta$
 $y = - \frac{1}{tan \theta} x + \frac{\rho}{sin \theta}$  
 $m =- \frac{1}{tan \theta}$ , $c = \frac{\rho}{sin \theta}$  
 
+\newpage
 \subsection{}
 The range of $\theta$ is independent on image size: $- \frac{\pi}{2} \leq \theta \leq \frac{\pi}{2}$  
 The largest $\rho$ will be a diagonal across the image space: $0 \leq abs(\rho) \leq \sqrt{W^{2} + H^{2}}$
 
+\newpage
 \subsection{}
 \subsubsection{Matlab script for plot generation in matlab/q2.4.m}
 Image space points (10, 10), (15, 15) and (30, 30) were represented in Hough space, resulting in sinusoids as discussed above. The sinusoids in Hough space intersect at one point. That point describes a line in image space that passes through the points (10, 10), (15, 15) and (30, 30). The sinusoids intersect at $\theta = - \frac{pi}{4}$ , $\rho = 0$, which describes a 45 degree line passing through origin in image space, i.e. $m=1$, $c=0$.
@@ -63,36 +66,158 @@ Image space points (10, 10), (15, 15) and (30, 30) were represented in Hough spa
 \label{fig:bblr}
 \end{figure}   
 
+\newpage
 \section{Implementation}
+\subsection{}
+\newpage
+\subsection{}
+\newpage
+\subsection{}
+\newpage
+\subsection{}
+\newpage
+\subsection{}
+\newpage
+\subsection{}
 
-\subsection{}
-\subsection{}
-\subsection{}
-\subsection{}
-\subsection{}
-\subsection{}
-
+\newpage
 \section{Experiments}
 \subsection{Did your code work well on all the image with a single set of parameters? }
 I was unable to find a single set of parameters that performered equally well across all images.
 
-\subsection{How did the optimal set of parameters vary with images?}
+\newpage
+\subsection{Optimal parameters}
 After experimenting on 10 parameter sets, the gaussian filter standard deviation parameter appears to have the most impact on image to image variation. Experiments with lower standard deviation showed better results for images with clearly defined lines and little noise (such as image 1), however noisier images (such as image 6 and image 9) had noisy responses.
 Increasing the standard deviation of the gaussian filter results in cleaner lines on noisy images, but resulted in fewer detected lines on less noisy images.
 
-\subsection{Which step of the algorithm causes the most problems? }
+\newpage
+\subsection{Problematic steps}
 From these results I would argue the the edge filter is the most problematic piece of this process, as a fixed blur causes inconsistent results across images with wildly different frequency content.
 
-\subsection{Did you find any changes you could make to your code or algorithm that improved performance?}
+\newpage
+\subsection{Performance increases}
 I found maintaining single for loops / vectorization to provide faster performance when batch processing images.
 
-\subsection{Tabulate the different experiments that you have performed with their results in your write-up.}
+\newpage
+\subsection{Tabulate experiments}
 
-\subsection{Also de-scribe how well your code worked on different images, what effect the parameters had on any improvements that you made to your code to make it work better. }
+\subsubsection{}
+\begin{tabular} { c c }
+Name  &  31January2018:10:57:11 \\
+sigma  &  2.000000 \\
+threshold  &  0.030000 \\
+rhoRes & 2.000000 \\
+thetaRes & 0.034907 \\
+nLines & 50.000000 
+\end{tabular}
+\\ \\
+These parameters work poorly on all images.
+
+\subsubsection{}
+\begin{tabular} { c c }
+Name & 31January2018:12:18:43\\
+sigma & 2.000000\\
+threshold & 0.030000\\
+rhoRes & 2.000000\\
+thetaRes & 1.000000\\
+nLines & 50.000000
+\end{tabular}
+\\ \\
+These parameters perform approximately as well as the initial parameters, however increasing angular step size reduces computation time dramatically.
+
+\subsubsection{}
+\begin{tabular} { c c }
+Name & 31January2018:12:29:22\\
+sigma & 2.000000\\
+threshold & 0.500000\\
+rhoRes & 2.000000\\
+thetaRes & 1.000000\\
+nLines & 50.000000
+\end{tabular}
+\\ \\
+Increasing the threshold resulted in much more accurate lines on all images, however on most images the algorithm was unable to match up to nLines.
+
+\subsubsection{}
+\begin{tabular} { c c }
+Name & 31January2018:12:40:05\\
+sigma & 2.000000\\
+threshold & 0.250000\\
+rhoRes & 1.000000\\
+thetaRes & 1.000000\\
+nLines & 50.000000
+\end{tabular}
+\\ \\
+Dropping the the threshold by half and using finer magnitude step size did not dramatically change results.
+
+\subsubsection{}
+\begin{tabular} { c c }
+Name & 31January2018:12:49:09\\
+sigma & 1.000000\\
+threshold & 0.100000\\
+rhoRes & 1.000000\\
+thetaRes & 1.000000\\
+nLines & 50.000000
+\end{tabular}
+\\ \\
+Dropping threshold to 0.1 and reducing blur results in decreased accuracy on noisy and non-linear images.
+
+\subsubsection{}
+\begin{tabular} { c c }
+Name & 31January2018:12:53:47\\
+sigma & 1.000000\\
+threshold & 0.250000\\
+rhoRes & 1.000000\\
+thetaRes & 1.000000\\
+nLines & 50.000000
+\end{tabular}
+\\ \\
+Increasing threshold back to 0.25 has little effect, noisy and non-linear images have poor results.
+
+\subsubsection{}
+\begin{tabular} { c c }
+Name & 31January2018:13:16:10\\
+sigma & 3.000000\\
+threshold & 0.500000\\
+rhoRes & 1.000000\\
+thetaRes & 5.000000\\
+nLines & 50.000000
+\end{tabular}
+\\ \\
+Trying more blur and reducing angular resolution with a high threshold produces too few lines on all images, though the lines are accurate.
+
+\subsubsection{}
+\begin{tabular} { c c }
+Name & 31January2018:13:17:32\\
+sigma & 3.000000\\
+threshold & 0.100000\\
+rhoRes & 1.000000\\
+thetaRes & 5.000000\\
+nLines & 50.000000
+\end{tabular}
+\\ \\
+Reducing threshold and maintaining high blur produces relatively consistent performance across the image set.
+
+\subsubsection{}
+\begin{tabular} { c c }
+Name & 31January2018:15:12:35\\
+sigma & 3.000000\\
+threshold & 0.100000\\
+rhoRes & 1.000000\\
+thetaRes & 0.500000\\
+nLines & 50.000000
+\end{tabular}
+\\ \\
+Finer angular resolution has a small improvement on performance. This is the most consistently well performing parameter set I was able to produce.
+
+\newpage
+\subsection{Performance across images, effect of parameters}
 Images with non-linear elements (such as image 2 with the vase and image 6 with the text on boxes) consistently resulted in inaccurate lines. Increasing the edge threshold resulted in fewer but more accurate lines on these images.
 
-\subsection{If you made changes to your code that required changes to the results generation script, include your updated version in your submission.  }
+\newpage
+\subsection{Changes to houghscript}
 It's not required to run, but I modified the script to save results to a new timestamped directory with the parameters written to a text file. This made it easier to keep track of all experiments, would be a nice-to-add feature for future homeworks like this for non-Matlabians.
 
 
 \end{document}
+
+
