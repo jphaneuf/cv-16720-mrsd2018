@@ -25,13 +25,17 @@ function [rhos, thetas] = myHoughLines(H, nLines)
   end
 
   %Find nLines highest votes and sort
-  nonzero_indices = find(Hnms>0);
-  votes = Hnms(nonzero_indices);
-  [rhos,thetas] = ind2sub(size(Hnms),nonzero_indices);
-  [x,order] = sort(votes,'descend');
-  order = order(1:nLines);
-  votes = votes(order);
-  rhos = rhos(order);
-  thetas = thetas(order);
+  try
+    nonzero_indices = find(Hnms>0);
+    votes = Hnms(nonzero_indices);
+    [rhos,thetas] = ind2sub(size(Hnms),nonzero_indices);
+    [x,order] = sort(votes,'descend');
+    order = order(1:nLines);
+    votes = votes(order);
+    rhos = rhos(order);
+    thetas = thetas(order);
+  catch
+    fprintf('No lines detected, please check parameters');
+  end
 
 end
