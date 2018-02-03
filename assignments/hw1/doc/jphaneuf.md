@@ -46,10 +46,38 @@ Extra Credit
 ## 3.6
 
 # 4 Experiments
-Did your code work well on all the image with a single set of parameters? How did the optimal set of
-parameters vary with images? Which step of the algorithm causes the most problems? Did you find any
-changes you could make to your code or algorithm that improved performance?
-Tabulate the different experiments that you have performed with their results in your write-up. Also de-
-scribe how well your code worked on different images, what effect the parameters had on any improve-
-ments that you made to your code to make it work better. If you made changes to your code that required
-changes to the results generation script, include your updated version in your submission.
+Did your code work well on all the image with a single set of parameters? 
+
+I was unable to find a single set of parameters that performered equally well across all images. In particular
+Best image 1:
+sigma: 1.000000
+threshold: 0.250000
+rhoRes: 1.000000
+thetaRes: 1.000000
+nLines: 50.000000
+
+Best/cleanest on images 6 and 9
+sigma: 3.000000
+threshold: 0.100000
+rhoRes: 1.000000
+thetaRes: 0.500000
+nLines: 50.000000
+
+## 4.1 How did the optimal set of parameters vary with images? 
+After experimenting on 10 parameter sets, the gaussian filter standard deviation parameter appears to have the most impact on image to image variation. Experiments with lower standard deviation showed better results for images with clearly defined lines and little noise (such as image 1), however noisier images (such as image 6 and image 9) had noisy responses.
+Increasing the standard deviation of the gaussian filter results in cleaner lines on noisy images, but resulted in fewer detected lines on less noisy images.
+
+## 4.2 Which step of the algorithm causes the most problems? 
+From these results I would argue the the edge filter is the most problematic piece of this process, as a fixed blur causes inconsistent results across images with wildly different frequency content.
+
+## 4.3 Did you find any changes you could make to your code or algorithm that improved performance?
+I found maintaining single for loops / vectorization to provide faster performance when batch processing images.
+
+## 4.4 Tabulate the different experiments that you have performed with their results in your write-up.
+
+## 4.5 Also de-scribe how well your code worked on different images, what effect the parameters had on any improvements that you made to your code to make it work better. 
+Images with non-linear elements (such as image 2 with the vase and image 6 with the text on boxes) consistently resulted in inaccurate lines. Increasing the edge threshold resulted in fewer but more accurate lines on these images.
+
+## 4.6 If you made changes to your code that required changes to the results generation script, include your updated version in your submission.  
+It's not required to run, but I modified the script to save results to a new timestamped directory with the parameters written to a text file. This made it easier to keep track of all experiments, would be a nice-to-add feature for future homeworks like this for non-Matlabians.
+
