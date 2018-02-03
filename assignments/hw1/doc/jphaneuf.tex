@@ -5,7 +5,7 @@
 \usepackage[margin=1in]{geometry}
 \usepackage{graphicx}
 %\usepackage[toc,page]{appendix}
-\graphicspath{ {./img/} }
+\graphicspath{ {./doc/img/} }
 \newcommand{\rpm}{\raisebox{.2ex}{$\scriptstyle\pm$}} 
 \usepackage{listings}
 \usepackage{xcolor}
@@ -52,7 +52,14 @@ The largest $\rho$ will be a diagonal across the image space: $0 \leq abs(\rho) 
 \subsubsection{ Matlab script for plot generation in matlab/q2_4.m}
 Image space points (10, 10), (15, 15) and (30, 30) were represented in Hough space, resulting in sinusoids as discussed above. The sinusoids in Hough space intersect at one point. That point describes a line in image space that passes through the points (10, 10), (15, 15) and (30, 30). The sinusoids intersect at $\theta = - \frac{pi}{4}$ , $\rho = 0$, which describes a 45 degree line passing through origin in image space, i.e. $m=1$, $c=0$.
 
-![Intersecting lines in Hough space](./doc/img/q2_4.png)  
+
+
+\begin{figure}[H]
+\centering
+\includegraphics[page=1,width=0.75\textwidth]{q2_4}
+\caption{Intersecting lines in Hough space}    
+\label{fig:bblr}
+\end{figure}   
 
 
 \subsection{Q2.5  }
@@ -109,4 +116,3 @@ It's not required to run, but I modified the script to save results to a new tim
 \section{Team Goals}
 
 \end{document}
-
