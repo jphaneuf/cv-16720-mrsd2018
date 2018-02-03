@@ -1,4 +1,3 @@
-
 \documentclass[12pt]{article}
 \usepackage[english]{babel}
 \usepackage{float}
@@ -36,9 +35,11 @@ Being a linear combination of same-period sinusoids, $\rho(\theta)$ is guarantee
 Hough space can be parameterized in slope-intercept form.  
 Doing so creates two major problems:  
 
-\subsubsection{The slope and intercept parameters are unbounded, making implementation impractical}
+\begin{itemize}
+\item The slope and intercept parameters are unbounded, making implementation impractical
+\item Vertical lines (infinite slope) cannot be represented 
+\end{itemize}
 
-\subsubsection{Vertical lines (infinite slope) cannot be represented  }
 
 When parameterizing in normal form, the magnitude and angle are bounded (magnitude bound is a function of image size).
 
