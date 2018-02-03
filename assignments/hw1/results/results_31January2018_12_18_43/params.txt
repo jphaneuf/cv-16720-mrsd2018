@@ -1,0 +1,5 @@
+sigma: 2.000000
+threshold: 0.030000
+rhoRes: 2.000000
+thetaRes: 1.000000
+nLines: 50.000000
