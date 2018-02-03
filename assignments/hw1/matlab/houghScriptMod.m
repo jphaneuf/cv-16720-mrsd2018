@@ -6,19 +6,19 @@ param_file = strcat(resultsdir,'/params.txt')
 mkdir(resultsdir)
 
 %parameters
-sigma     = 2;
-threshold = 0.03;
-rhoRes    = 2;
-thetaRes  = pi/90;
+sigma     = 3;
+threshold = 0.1;
+rhoRes    = 1;
+thetaRes  = 0.5;
 nLines    = 50;
 %end of parameters
 
 fd = fopen(param_file,'w');
-fprintf(fd, 'sigma: %f\n', sigma)
-fprintf(fd, 'threshold: %f\n', threshold)
-fprintf(fd, 'rhoRes: %f\n', rhoRes)
-fprintf(fd, 'thetaRes: %f\n', thetaRes)
-fprintf(fd, 'nLines: %f\n', nLines)
+fprintf(fd, 'sigma: %f\n', sigma);
+fprintf(fd, 'threshold: %f\n', threshold);
+fprintf(fd, 'rhoRes: %f\n', rhoRes);
+fprintf(fd, 'thetaRes: %f\n', thetaRes);
+fprintf(fd, 'nLines: %f\n', nLines);
 
 
 imglist = dir(sprintf('%s/*.jpg', datadir));
