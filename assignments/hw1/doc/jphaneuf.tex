@@ -65,26 +65,66 @@ Image space points (10, 10), (15, 15) and (30, 30) were represented in Hough spa
 \centering
 \includegraphics[page=1,width=0.75\textwidth]{q2_4}
 \caption{Intersecting lines in Hough space}    
-\label{fig:bblr}
+\label{fig:intersect_hough}
 \end{figure}   
 
 \newpage
 \section{Implementation}
+\begin{figure}[H]
+\centering
+\includegraphics[page=1,width=0.75\textwidth]{coins}
+\caption{Original image for implementation test}    
+\label{fig:intersect_hough}
+\end{figure}   
+
 \subsection{}
+\begin{figure}[H] \centering \includegraphics[page=1,width=0.75\textwidth]{imagefilter_blur}
+\caption{Blurred image using myImageFilter}    \end{figure}   
+
+
 \newpage
 \subsection{}
+I chose to implement the image filter with a single for loop. In essence, the for loop loops through each pixel (nrows*ncols), and for each pixel uses divides/modulos to determine neighboring pixels.
+
 \newpage
 \subsection{}
+\begin{figure}[H] \centering \includegraphics[page=1,width=0.75\textwidth]{edgefilter_im}
+\caption{Edge filter magnitude}    \end{figure}   
+\begin{figure}[H] \centering \includegraphics[page=1,width=0.75\textwidth]{edgefilter_io}
+\caption{Edge filter orientation}    \end{figure}   
+\begin{figure}[H] \centering \includegraphics[page=1,width=0.75\textwidth]{edgefilter_ix}
+\caption{Edge filter gradient x}    \end{figure}   
+\begin{figure}[H] \centering \includegraphics[page=1,width=0.75\textwidth]{edgefilter_iy}
+\caption{Edge filter gradient y}    \end{figure}   
+
+
 \newpage
 \subsection{}
+\begin{figure}[H] \centering \includegraphics[page=1,width=0.75\textwidth]{hough}
+\caption{Hough transform}    \end{figure}   
+
+
 \newpage
 \subsection{}
+\begin{figure}[H] \centering \includegraphics[page=1,width=0.75\textwidth]{thetas_rhos}
+\caption{Hough line parameters}    \end{figure}   
+
+
 \newpage
 \subsection{}
+\begin{figure}[H] \centering \includegraphics[page=1,width=0.75\textwidth]{img01_01edge}
+\caption{Image 1 edges}    \end{figure}   
+\begin{figure}[H] \centering \includegraphics[page=1,width=0.75\textwidth]{img01_02threshold}
+\caption{Image 1 thresholded}    \end{figure}   
+\begin{figure}[H] \centering \includegraphics[page=1,width=0.75\textwidth]{img01_03hough}
+\caption{Image 1 Hough transform}    \end{figure}   
+\begin{figure}[H] \centering \includegraphics[page=1,width=0.75\textwidth]{img01_04lines}
+\caption{Image 1 lines fitted}    \end{figure}   
+
 
 \newpage
 \section{Experiments}
-\subsection{Did your code work well on all the image with a single set of parameters? }
+\subsection{Cross image performance}
 I was unable to find a single set of parameters that performered equally well across all images.
 
 \newpage
@@ -221,5 +261,6 @@ It's not required to run, but I modified the script to save results to a new tim
 
 
 \end{document}
+
 
 
