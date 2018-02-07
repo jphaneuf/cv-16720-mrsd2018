@@ -4,7 +4,7 @@
 \usepackage[margin=1in]{geometry}
 \usepackage{graphicx}
 %\usepackage[toc,page]{appendix}
-\graphicspath{ {./img/} }
+\graphicspath{ {./doc/img/} }
 \newcommand{\rpm}{\raisebox{.2ex}{$\scriptstyle\pm$}} 
 \usepackage{listings}
 \usepackage{xcolor}
@@ -254,11 +254,6 @@ Finer angular resolution has a small improvement on performance. This is the mos
 \newpage
 \subsection{Performance across images, effect of parameters}
 Images with non-linear elements (such as image 2 with the vase and image 6 with the text on boxes) consistently resulted in inaccurate lines. Increasing the edge threshold resulted in fewer but more accurate lines on these images.
-
-\newpage
-\subsection{Changes to houghscript}
-It's not required to run, but I modified the script to save results to a new timestamped directory with the parameters written to a text file. This made it easier to keep track of all experiments, would be a nice-to-add feature for future homeworks like this for non-Matlabians.
-
 
 \end{document}
 
