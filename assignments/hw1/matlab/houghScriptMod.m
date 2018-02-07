@@ -6,12 +6,13 @@ param_file = strcat(resultsdir,'/params.txt')
 mkdir(resultsdir)
 
 %parameters
-sigma     = 0.5;
-threshold = 0.75;
-rhoRes    = 0.5;
-thetaRes  = 0.5;
-nLines    = 100;
+sigma     = 2;
+threshold = 0.03;
+rhoRes    = 2;
+thetaRes  = pi/90;
+nLines    = 50;
 %end of parameters
+
 
 fd = fopen(param_file,'w');
 fprintf(fd, 'sigma: %f\n', sigma);
@@ -57,3 +58,4 @@ for i = 1:numel(imglist)
     imwrite(img2, fname);
 end
     
+
