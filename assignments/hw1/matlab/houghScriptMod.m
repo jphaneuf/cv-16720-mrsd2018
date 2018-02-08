@@ -6,11 +6,11 @@ param_file = strcat(resultsdir,'/params.txt')
 mkdir(resultsdir)
 
 %parameters
-sigma     = 2;
-threshold = 0.03;
-rhoRes    = 2;
-thetaRes  = pi/90;
-nLines    = 50;
+sigma     = 3;
+threshold = 0.3;
+rhoRes    = 0.5;
+thetaRes  = 0.1;
+nLines    = 300;
 %end of parameters
 
 
