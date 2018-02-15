@@ -136,12 +136,25 @@ Increasing the standard deviation of the gaussian filter results in cleaner line
 \subsection{Problematic steps}
 From these results I would argue the the edge filter is the most problematic piece of this process, as a fixed blur causes inconsistent results across images with wildly different frequency content.
 
+I also found the gradient orientation neighbor selection step difficult to validate, and ended up with a fair amount of test code just for that step. 
+
 \newpage
 \subsection{Performance increases}
 I found maintaining single for loops / vectorization to provide faster performance when batch processing images.
 
 \newpage
 \subsection{Tabulate experiments}
+
+new:
+1. stock. picks up on some noisy stuff. suspect thetares is to fine.
+2. made thetares less fine to test effect and increase iteration speed. Looks pretty bad, may have to got back, but will try thresholding first.
+3. threshold increase looks no worse on linear/ low frequency images, improved on images with non-linear/hf content.
+4. Suspect rhores could be more useful if finer, reduce. looks cleaner but not getting to nlines.
+5. reduce threshold.
+6. ok, let's bump the threshold back up and finer thetares, and more lines
+7. This looks pretty clean. Want to try more lines to see if lines are on top of each other, or if lines. didn't do anything
+8. Try increasing sigma to see if more lines match. That ruined everythin.
+9. Back it down a bit to 3. still bad.
 
 \subsubsection{}
 \begin{tabular} { c c }
