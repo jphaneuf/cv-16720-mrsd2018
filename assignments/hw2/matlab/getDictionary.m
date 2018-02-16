@@ -10,6 +10,19 @@ function [dictionary] = getDictionary(imgPaths, alpha, K, method)
 %                       represents a single visual word
     % -----fill in your implementation here --------
 
+  for i = 1 : length(imgPaths)
+    if i == 2
+      break
+    end
+    file_path = strcat( '../data/' , imgPaths ( i ) );
+    img = imread( char ( file_path ) );
+    img = rgb2gray ( img );
+    corners = getHarrisPoints( img , alpha, 0.04 );
+    
+  end
+%  apply filterbank to img
+  dictionary = 0
+  
     
 
     % ------------------------------------------
