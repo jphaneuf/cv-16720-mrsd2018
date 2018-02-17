@@ -18,7 +18,9 @@ function [dictionary] = getDictionary(imgPaths, alpha, K, method)
   parfor i = 1 : length(imgPaths)
     file_path = strcat( '../data/' , imgPaths ( i ) );
     img = imread( char ( file_path ) );
-    img = rgb2gray ( img );
+    if length ( size ( img ) ) == 3
+      img = rgb2gray ( img );
+    end
     if method == 'harris'
       corners = getHarrisPoints( img , alpha, 0.04 );
     elseif method == 'random'
