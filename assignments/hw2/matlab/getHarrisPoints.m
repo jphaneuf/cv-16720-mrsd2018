@@ -37,14 +37,14 @@ function [points] = getHarrisPoints(I, alpha, k)
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   %% Apply eigen value threshold approximation function for each pixel %%%%%%%%%
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-  points = zeros ( w * h , 3 );
+  points = ones ( w * h , 3 );
   covsize = size ( Sxx );
+
   parfor i = 1 : h * w;
-    %for j = 1 : h;
-      [ y , x ] = ind2sub( covsize , i );
-      COVij  = double ( [ Sxx( y , x ) Sxy( y , x );Sxy( y , x ) Syy( y , x )]);
-      R      = det    ( COVij ) - k * ( trace ( COVij ) ^2 );
-      points ( i , : ) = [ x y R ];
+    [ y , x ] = ind2sub( covsize , i );
+    COVij  = double ( [ Sxx( y , x ) Sxy( y , x );Sxy( y , x ) Syy( y , x )]);
+    R      = det    ( COVij ) - k * ( trace ( COVij ) ^2 );
+    points ( i , : ) = [ x y R ];
   end
 
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
