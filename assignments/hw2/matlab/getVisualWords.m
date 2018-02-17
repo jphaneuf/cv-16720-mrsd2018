@@ -30,10 +30,10 @@ function [wordMap] = getVisualWords(I, dictionary, filterBank)
   %% Get dictionary index of nearest centroid %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-  I_features           = extractFilterResponses( I , filterBank )
-  I_features           = reshape ( I_features , h * w , [] )
-  distances            = pdist2  ( I_features , dictionary.dictionary )
-  [ values , wordMap ] = min     ( distances  , [] , 2 )
-  wordMap              = reshape ( wordMap , h , w )
+  I_features           = extractFilterResponses( I , filterBank );
+  I_features           = reshape ( I_features , h * w , [] );
+  distances            = pdist2  ( I_features , dictionary.dictionary );
+  [ values , wordMap ] = min     ( distances  , [] , 2 );
+  wordMap              = reshape ( wordMap , h , w );
     
 end
