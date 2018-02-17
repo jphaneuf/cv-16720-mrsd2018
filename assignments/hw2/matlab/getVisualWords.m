@@ -32,7 +32,7 @@ function [wordMap] = getVisualWords(I, dictionary, filterBank)
 
   I_features           = extractFilterResponses( I , filterBank );
   I_features           = reshape ( I_features , h * w , [] );
-  distances            = pdist2  ( I_features , dictionary.dictionary );
+  distances            = pdist2  ( I_features , dictionary );
   [ values , wordMap ] = min     ( distances  , [] , 2 );
   wordMap              = reshape ( wordMap , h , w );
     
