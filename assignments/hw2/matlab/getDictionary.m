@@ -13,7 +13,7 @@ function [dictionary] = getDictionary(imgPaths, alpha, K, method)
    
   filterBank = createFilterBank();
   depth = length(filterBank) * 3; 
-  dictionary = zeros( 0 , depth );
+  pixelResponses = zeros( 0 , depth );
 
   for i = 1 : length(imgPaths)
     if i == 3 
@@ -22,16 +22,21 @@ function [dictionary] = getDictionary(imgPaths, alpha, K, method)
     file_path = strcat( '../data/' , imgPaths ( i ) );
     img = imread( char ( file_path ) );
     img = rgb2gray ( img );
-    corners = getHarrisPoints( img , alpha, 0.04 );
+    if method == 'harris'
+      corners = getHarrisPoints( img , alpha, 0.04 );
+    elseif method == 'random'
+      corners = getRandomPoints( img , alpha, 0.04 );
+    end
+
     img_filtered = extractFilterResponses(img, filterBank);
-    %for c in corners
     for c = 1 : length( corners )
       x = corners(c,1);
       y = corners(c,2);
       row = reshape(img_filtered(y,x,:) , 1 , [] )
-      dictionary = [ dictionary ; row ]
+      pixelResponses = [ pixelResponses ; row ]
     end
   end
+  [ ~ , dictionary ] = kmeans ( pixelResponses , K , 'EmptyAction' , 'drop')
 %  apply filterbank to img
   
     
