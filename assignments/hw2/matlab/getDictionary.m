@@ -15,10 +15,7 @@ function [dictionary] = getDictionary(imgPaths, alpha, K, method)
   depth = length(filterBank) * 3; 
   pixelResponses = zeros( 0 , depth );
 
-  for i = 1 : length(imgPaths)
-    if i == 3 
-      break
-    end
+  parfor i = 1 : length(imgPaths)
     file_path = strcat( '../data/' , imgPaths ( i ) );
     img = imread( char ( file_path ) );
     img = rgb2gray ( img );
@@ -37,11 +34,7 @@ function [dictionary] = getDictionary(imgPaths, alpha, K, method)
     end
   end
   [ ~ , dictionary ] = kmeans ( pixelResponses , K , 'EmptyAction' , 'drop')
-%  apply filterbank to img
-  
-    
-
-    % ------------------------------------------
+  save( './dictionary' , 'dictionary' )
     
 end
 
