@@ -30,7 +30,7 @@ load('dictionaryHarris.mat');
 %uncomment the following line to run the random version
 % load('dictionaryRandom.mat');
 
-
+filterBank = createFilterBank()
 
 source = '../data/';
 target = '../data/';
