@@ -62,7 +62,7 @@ function [points] = getHarrisPoints(I, alpha, k)
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   [ val  ind  ] = sort    ( reshape ( nmsimg , 1 , [] ) , 'descend' );
   [ rows cols ] = ind2sub ( size ( nmsimg ) , ind );
-  points = vertcat ( cols , rows )'
-  points = points  ( 1 : alpha , : )
+  points = vertcat ( cols , rows )' ;
+  points = points  ( 1 : alpha , : );
 
 end
