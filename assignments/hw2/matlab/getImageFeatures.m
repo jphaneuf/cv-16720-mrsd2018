@@ -9,8 +9,8 @@ function [h] = getImageFeatures(wordMap, dictionarySize)
   %   h:                  the feature vector for this image
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-  tabulation = tabulate   ( reshape ( wordMap , 1 , [] ) )
+  tabulation = tabulate   ( reshape ( wordMap , 1 , [] ) );
   %% Extract percentages (col 3 ) %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-  h          = tabulation ( : , 3 ) / 100
+  h          = tabulation ( : , 3 ) / 100;
 
 end
