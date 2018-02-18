@@ -13,10 +13,11 @@ function [ dist ] = getImageDistance( hist1 , histSet , method )
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-  if     method == 'euclidean'
-    dist = pdist2 ( hist1 , histSet , 'euclidean' )
-  elseif method == 'chi2'
-    dist = pdist2 ( hist1 , histSet , 'chisq' )
+  
+  if     strcmp ( method , 'euclidean' )
+    dist = pdist2_custom ( hist1 , histSet , 'euclidean' );
+  elseif strcmp ( method , 'chi2' )
+    dist = pdist2_custom ( hist1 , histSet , 'chisq' );
   end
 
 end
