@@ -21,9 +21,13 @@ function [points] = getHarrisPoints(I, alpha, k)
   %% Compute X / Y Gradients %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   %% and subtract mean%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+  mf_size     = 5; % Mean Filter %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  mf          = ones ( mf_size , mf_size ) / mf_size ^ 2;
+
   [ Ix , Iy ] = imgradientxy ( I );
-  Ix              = Ix - mean ( reshape ( Ix , 1 , [] ) );
-  Iy              = Iy - mean ( reshape ( Iy , 1 , [] ) );
+  Ix          = imfilter ( Ix , mf );
+  Iy          = imfilter ( Iy , mf );
 
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   %% Create covariance images %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -38,20 +42,27 @@ function [points] = getHarrisPoints(I, alpha, k)
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   %% Apply eigen value threshold approximation function for each pixel %%%%%%%%%
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-  points = ones ( w * h , 3 );
   covsize = size ( Sxx );
+  nmsimg  =  zeros ( h , w )
 
   parfor i = 1 : h * w;
     [ y , x ] = ind2sub( covsize , i );
     COVij  = double ( [ Sxx( y , x ) Sxy( y , x );Sxy( y , x ) Syy( y , x )]);
     R      = det    ( COVij ) - k * ( trace ( COVij ) ^2 );
-    points ( i , : ) = [ x y R ];
+    nmsimg ( i ) = R;
   end
 
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  %% Apply non maximal suppression to corner detect %%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  nmsimg = nms( nmsimg );
+ 
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   %% Sort points by R value , return top alpha points%%%%%%%%%%%%%%%%%%%%%%%%%%%
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-  points = sortrows ( points , 3 , 'descend' );
-  points = points   ( 1 : alpha , 1:2 );
+  [ val  ind  ] = sort    ( reshape ( nmsimg , 1 , [] ) , 'descend' );
+  [ rows cols ] = ind2sub ( size ( nmsimg ) , ind );
+  points = vertcat ( cols , rows , val )'
+  points = points ( 1 : alpha , 1:2 )
 
 end
