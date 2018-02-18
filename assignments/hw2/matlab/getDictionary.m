@@ -35,10 +35,10 @@ function [dictionary] = getDictionary(imgPaths, alpha, K, method)
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     %% Find points of interest on each image in imgPaths %%%%%%%%%%%%%%%%%%%%%%%
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    if     method == 'harris'
+    if     strcmp (method , 'harris' )
       corners = getHarrisPoints( img , alpha, 0.04 );
-    elseif method == 'random'
-      corners = getRandomPoints( img , alpha, 0.04 );
+    elseif strcmp (method , 'random' )
+      corners = getRandomPoints( img , alpha );
     end
 
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -48,16 +48,15 @@ function [dictionary] = getDictionary(imgPaths, alpha, K, method)
     for c = 1 : length(  corners )
       x              =   corners ( c , 1 );
       y              =   corners ( c , 2 );
-      row            =   reshape ( img_filtered( y , x , : ) , 1 , [] )
-      pixelResponses = [ pixelResponses ; row ]
+      row            =   reshape ( img_filtered( y , x , : ) , 1 , [] );
+      pixelResponses = [ pixelResponses ; row ];
     end
   end
 
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   %% Cluster pixel feature vectors %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-  [ ~ , dictionary ] = kmeans ( pixelResponses , K , 'EmptyAction' , 'drop')
-  save( './dictionary' , 'dictionary' )
+  [ ~ , dictionary ] = kmeans ( pixelResponses , K , 'EmptyAction' , 'drop');
     
 end
 
