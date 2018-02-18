@@ -12,5 +12,6 @@ function [points] = getRandomPoints(I, alpha)
   points         = rand  ( alpha , 2 );
   points( : , 1) = round ( w * points ( : , 1 ) );
   points( : , 2) = round ( h * points ( : , 2 ) );
+  points ( points == 0 ) = 1;
 
 end
