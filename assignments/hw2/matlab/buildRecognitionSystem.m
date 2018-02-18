@@ -37,13 +37,12 @@ function [x]  = build_labeled_models ( image_paths , trainLabels , ...
 
   trainFeatures = zeros ( n_images , dictionary_size );
 
-  size ( trainFeatures )
   parfor i = 1 : length ( image_paths )
 
     img_path = char ( strcat ( '../data/' , image_paths ( i ) ) )
     img      = imread ( img_path );
     wordMap  = getVisualWords   ( img , dictionary, filterBank );
-    h        = getImageFeatures ( wordMap , dictionary_size )
+    h        = getImageFeatures ( wordMap , dictionary_size );
     trainFeatures ( i , : ) = h;
 
   end
