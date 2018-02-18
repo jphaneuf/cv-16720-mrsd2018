@@ -5,8 +5,8 @@
 
 load('../data/traintest');
 imgPaths = train_imagenames;
-alpha    = 100;
-K        = 20;
+alpha    = 200;
+K        = 75;
 
 dictionary = getDictionary(imgPaths, alpha, K, 'harris');
 save( './dictionaryHarris' , 'dictionary' )
