@@ -81,6 +81,32 @@ Figure \ref{fig:harris_corners} shows my Harris corner detector applied to three
 \label{fig:harris_corners}
 \end{figure}   
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+\section{Q2}
+\subsection{Q2.1}
+
+Figure \ref{fig:wordmapharris} shows the word map produced on 3 images of airport and rainforest class using the harris corner generated dictionary.
+Figure \ref{fig:wordmaprandom} shows the word map produced on 3 images of airport and rainforest class using the random corner generated dictionary.
+The goal of viewing these images is to capture semantic labeling on swatchs of an image, so "better" means more contiguous space logically grouped together (i.e. all pixels of a swath of grass have the same label.) The word maps from the harris dictionary appear to accomplish this better than the word maps from the random dictionary.
+
+\begin{figure}[H]
+\centering
+\includegraphics[page=1,width=1\textwidth]{q21_wordmap_harris}
+\caption{Wordmap Harris corners corners}    
+\label{fig:wordmapharris}
+\end{figure}   
+
+
+\begin{figure}[H]
+\centering
+\includegraphics[page=1,width=1\textwidth]{q21_wordmap_random}
+\caption{Wordmap random corners}    
+\label{fig:wordmaprandom}
+\end{figure}   
+
+
 
 
 
