@@ -10,18 +10,18 @@ function [points] = getHarrisPoints(I, alpha, k)
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  if length ( size ( I ) ) == 3
+    I = rgb2gray ( I );
+  end
   h = size  ( I , 1 );
   w = size  ( I , 2 );
+
 
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   %% Compute X / Y Gradients %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   %% and subtract mean%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-  gaussian_filter = fspecial( 'gaussian' , 3 , 3 );
-  sobel_filter_y  = fspecial( 'sobel' );
-  sobel_filter_x  = sobel_filter_y';
-  Ix              = imfilter  ( I , sobel_filter_x );
-  Iy              = imfilter  ( I , sobel_filter_y );
+  [ Ix , Iy ] = imgradientxy ( I );
   Ix              = Ix - mean ( reshape ( Ix , 1 , [] ) );
   Iy              = Iy - mean ( reshape ( Iy , 1 , [] ) );
 
@@ -29,6 +29,7 @@ function [points] = getHarrisPoints(I, alpha, k)
   %% Create covariance images %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   %% Stores covariance values for each pixel in I %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  gaussian_filter = fspecial( 'gaussian' , 3 , 3 );
   Sxx             = imfilter ( Ix .* Ix , gaussian_filter );
   Syy             = imfilter ( Iy .* Iy , gaussian_filter );
   Sxy             = imfilter ( Ix .* Iy , gaussian_filter );
