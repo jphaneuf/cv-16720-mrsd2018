@@ -10,7 +10,7 @@ function [h] = getImageFeatures(wordMap, dictionarySize)
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
   %histcounts high range is non-inclusive so +1
-  h = histcounts (  wordMap , 1 : ( dictionarySize + 1 ) )
-  h = h / sum ( h )
+  h = histcounts (  wordMap , 1 : ( dictionarySize + 1 ) );
+  h = h / sum ( h );
 
 end
