@@ -27,21 +27,24 @@ build_labeled_models ( train_imagenames , train_labels , ...
                        dictionary       , filterBank   , 'Random' )
 
 
-
-
 function [x]  = build_labeled_models ( image_paths , trainLabels , ...
                                        dictionary  , filterBank  , ...
                                        point_selection_method )
 
-  trainFeatures = zeros ( 0 , 0 );
+  %trainFeatures = zeros ( 0 , 0 );
+  dictionary_size = size ( dictionary , 1 ) ;
+  n_images        = length ( image_paths ) ;
 
-  for i = 1 : length ( image_paths )
+  trainFeatures = zeros ( n_images , dictionary_size );
+
+  size ( trainFeatures )
+  parfor i = 1 : length ( image_paths )
 
     img_path = char ( strcat ( '../data/' , image_paths ( i ) ) )
     img      = imread ( img_path );
     wordMap  = getVisualWords   ( img , dictionary, filterBank );
-    h        = getImageFeatures ( wordMap , size ( dictionary , 1 ) )
-    trainFeatures = [ trainFeatures ; h' ];
+    h        = getImageFeatures ( wordMap , dictionary_size )
+    trainFeatures ( i , : ) = h;
 
   end
   save ( strcat ( 'vision' , point_selection_method ) , 'dictionary' , 'filterBank' , 'trainFeatures' , 'trainLabels' )
