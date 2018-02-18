@@ -43,7 +43,7 @@ function [points] = getHarrisPoints(I, alpha, k)
   %% Apply eigen value threshold approximation function for each pixel %%%%%%%%%
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   covsize = size ( Sxx );
-  nmsimg  =  zeros ( h , w )
+  nmsimg  =  zeros ( h , w );
 
   parfor i = 1 : h * w;
     [ y , x ] = ind2sub( covsize , i );
@@ -62,7 +62,7 @@ function [points] = getHarrisPoints(I, alpha, k)
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   [ val  ind  ] = sort    ( reshape ( nmsimg , 1 , [] ) , 'descend' );
   [ rows cols ] = ind2sub ( size ( nmsimg ) , ind );
-  points = vertcat ( cols , rows , val )'
-  points = points ( 1 : alpha , 1:2 )
+  points = vertcat ( cols , rows )'
+  points = points  ( 1 : alpha , : )
 
 end
