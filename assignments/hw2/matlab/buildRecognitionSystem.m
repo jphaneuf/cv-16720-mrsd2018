@@ -17,14 +17,14 @@ filterBank = createFilterBank();
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 load ( 'dictionaryHarris' );
 build_labeled_models ( train_imagenames , train_labels , ...
-                       dictionary ,       filterBank   , 'harris' )
+                       dictionary ,       filterBank   , 'Harris' )
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Process model for random points %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 load ( 'dictionaryRandom' );
 build_labeled_models ( train_imagenames , train_labels , ...
-                       dictionary       , filterBank   , 'random' )
+                       dictionary       , filterBank   , 'Random' )
 
 
 
@@ -40,8 +40,8 @@ function [x]  = build_labeled_models ( image_paths , trainLabels , ...
     img_path = char ( strcat ( '../data/' , image_paths ( i ) ) )
     img      = imread ( img_path );
     wordMap  = getVisualWords   ( img , dictionary, filterBank );
-    h        = getImageFeatures ( wordMap , size ( dictionary , 1 ) );
-    trainFeatures = [ trainFeatures ; h ];
+    h        = getImageFeatures ( wordMap , size ( dictionary , 1 ) )
+    trainFeatures = [ trainFeatures ; h' ];
 
   end
   save ( strcat ( 'vision' , point_selection_method ) , 'dictionary' , 'filterBank' , 'trainFeatures' , 'trainLabels' )
