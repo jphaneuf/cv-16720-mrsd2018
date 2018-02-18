@@ -10,7 +10,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 load ('dictionary');
 load ('../data/traintest');
-filterBank = createFilterBank()
+filterBank = createFilterBank();
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -80,7 +80,8 @@ function [ ] = evaluate ( test_image_paths       , ...
   results          = zeros  ( n_images , 2 );
 
   parfor i = 1 : n_images
-    img_path = char ( strcat    ( '../data/' , test_image_paths ( i ) ) );
+    img_path = char ( strcat    ( '../data/' , test_image_paths ( i ) ) )
+    img_path
     img      = imread           ( img_path );
     wordMap  = getVisualWords   ( img , dictionary, filterBank );
     h        = getImageFeatures ( wordMap , size ( dictionary , 1 ) );
@@ -99,9 +100,13 @@ function [ ] = evaluate ( test_image_paths       , ...
   for i = 1 : n_images
     actual_label    = results ( i , 1 );
     predicted_label = results ( i , 2 );
-    confusion_matrix ( actual_label , predicted_label ) = ... 
-      1 + confusion_matrix ( actual_label , predicted_label );
   end
+  diagonals = sub2ind ( size ( confusion_matrix ) , ...
+                        1 : dictionary_size       , ...
+                        1 : diciontary_size )
+
+  
+  accuracy = sum ( confusion_matrix ( diagonals ) ) / n_images
 
 
   cm_file_name = sprintf ( 'confusion_matrix_%s_%s' , ...
@@ -109,7 +114,7 @@ function [ ] = evaluate ( test_image_paths       , ...
                             distance_method );
 
   save ( cm_file_name , 'confusion_matrix' );
-  fprintf ( 'Confusion Matrix %s %s ' , ...
+  fprintf ( 'Confusion Matrix %s %s \n' , ...
              point_selection_method   , ...
              distance_method )
   disp ( confusion_matrix )
