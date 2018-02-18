@@ -14,7 +14,7 @@ OUTPUTDIR=$OUTPUT
 ################################################################################
 
 rm ${OUTPUTDIR}.zip
-rm -rf $OUTPUTDIR
+#rm -rf $OUTPUTDIR
 
 ################################################################################
 ###Generate pdf and populate output dir#########################################
@@ -38,9 +38,9 @@ zip -r ${OUTPUTDIR}.zip $OUTPUTDIR
 ###Cleanup######################################################################
 ################################################################################
 #rm -rf $OUTPUTDIR
-rm doc/*.aux
-rm doc/*.log
-rm *.aux
-rm *.log
+#rm doc/*.aux
+#rm doc/*.log
+#rm *.aux
+#rm *.log
 
 evince $OUTPUTDIR/${OUTPUT}.pdf

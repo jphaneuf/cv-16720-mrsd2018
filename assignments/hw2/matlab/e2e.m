@@ -46,9 +46,14 @@ val = 0.04;
 img1 = imread('../data/football_stadium/sun_buiqpmohzvnttvfu.jpg');
 points1 = getHarrisPoints(img1, npoints, val);
 img2 = imread('../data/airport/sun_aifzfhyaxryjpgpf.jpg');
-points2 = getHarrisPoints(img1, npoints, val);
+points2 = getHarrisPoints(img2, npoints, val);
 img3 = imread('../data/bedroom/sun_abueimfnkuieazop.jpg');
-points3 = getHarrisPoints(img1, npoints, val);
+%img3 = imread('../doc/img/cornrer.png');
+points3 = getHarrisPoints(img3, npoints, val);
+
+%imshow ( img3)
+%hold on;
+%scatter ( points3 ( : , 1 ) , points3 ( : , 2) , 'r+' )
 
 figure;
 
@@ -69,4 +74,5 @@ hold on;
 scatter ( points3 ( : , 1 ) , points3 ( : , 2) , 'r+' )
 
 saveas ( gcf , '../doc/img/q13_harris.png' )
+
 
