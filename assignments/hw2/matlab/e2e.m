@@ -39,7 +39,6 @@ saveas ( gcf , '../doc/img/q12_extract_filters.png' )
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %{
-%}
 %img = imread('../data/airport/sun_aerinlrdodkqnypz.jpg');
 npoints = 100;
 val = 0.04;
@@ -75,4 +74,59 @@ scatter ( points3 ( : , 1 ) , points3 ( : , 2) , 'r+' )
 
 saveas ( gcf , '../doc/img/q13_harris.png' )
 
+%}
 
+%Make random
+%Make harris
+%2*3 ,3 images, 2 classes
+
+figure 
+
+subplot(2 , 3 , 1 )
+load ( '../doc/q21data/random/rainforest/sun_aacykkmwtykjfldf.mat' )
+imshow(wordMap / 75)
+ylabel('rainforest')
+subplot(2 , 3 , 2 )
+load ( '../doc/q21data/random/rainforest/sun_absitpbkzyrvmnem.mat' )
+imshow(wordMap / 75)
+subplot(2 , 3 , 3 )
+load ( '../doc/q21data/random/rainforest/sun_abafooecdwxfwlob.mat' )
+imshow(wordMap / 75)
+
+subplot(2 , 3 , 4 )
+load ( '../doc/q21data/random/airport/sun_aexxslabfmbsumkp.mat' )
+imshow(wordMap / 75)
+ylabel('airport')
+subplot(2 , 3 , 5 )
+load ( '../doc/q21data/random/airport/sun_aevitxnlfjzhdnti.mat' )
+imshow(wordMap / 75)
+subplot(2 , 3 , 6 )
+load ( '../doc/q21data/random/airport/sun_aerinlrdodkqnypz.mat' )
+imshow(wordMap / 75)
+saveas ( gcf , '../doc/img/q21_wordmap_random.png' )
+
+
+figure 
+
+subplot(2 , 3 , 1 )
+load ( '../doc/q21data/harris/rainforest/sun_aacykkmwtykjfldf.mat' )
+imshow(wordMap / 75)
+ylabel('rainforest')
+subplot(2 , 3 , 2 )
+load ( '../doc/q21data/harris/rainforest/sun_absitpbkzyrvmnem.mat' )
+imshow(wordMap / 75)
+subplot(2 , 3 , 3 )
+load ( '../doc/q21data/harris/rainforest/sun_abafooecdwxfwlob.mat' )
+imshow(wordMap / 75)
+
+subplot(2 , 3 , 4 )
+load ( '../doc/q21data/harris/airport/sun_aexxslabfmbsumkp.mat' )
+imshow(wordMap / 75)
+ylabel('airport')
+subplot(2 , 3 , 5 )
+load ( '../doc/q21data/harris/airport/sun_aetygbcukodnyxkl.mat' )
+imshow(wordMap / 75)
+subplot(2 , 3 , 6 )
+load ( '../doc/q21data/harris/airport/sun_aerinlrdodkqnypz.mat' )
+imshow(wordMap / 75)
+saveas ( gcf , '../doc/img/q21_wordmap_harris.png' )
