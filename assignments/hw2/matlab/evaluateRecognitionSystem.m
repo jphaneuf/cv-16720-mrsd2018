@@ -4,6 +4,7 @@
 % load traintest.mat and classify each of the test_imagenames files.
 % Report both accuracy and confusion matrix
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+parpool('local' , 18 )
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Load dictionary and test data %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -78,6 +79,7 @@ function [ ] = evaluate ( test_image_paths       , ...
   dictionary_size  = size   ( dictionary , 1 );
   n_images         = length ( test_image_paths );
   results          = zeros  ( n_images , 2 );
+  nlabels          = 8;
 
   parfor i = 1 : n_images
     img_path = char ( strcat    ( '../data/' , test_image_paths ( i ) ) );
@@ -95,7 +97,7 @@ function [ ] = evaluate ( test_image_paths       , ...
 
   end
 
-  confusion_matrix = zeros  ( dictionary_size , dictionary_size );
+  confusion_matrix = zeros  ( nlabels , nlabels );
   for i = 1 : n_images
     actual_label    = results ( i , 1 );
     predicted_label = results ( i , 2 );
@@ -103,8 +105,8 @@ function [ ] = evaluate ( test_image_paths       , ...
       1 + confusion_matrix ( actual_label , predicted_label );
   end
   diagonals = sub2ind ( size ( confusion_matrix ) , ...
-                        1 : dictionary_size       , ...
-                        1 : dictionary_size )
+                        1 : nlabels               , ...
+                        1 : nlabels );
 
   
   accuracy = sum ( confusion_matrix ( diagonals ) ) / n_images
