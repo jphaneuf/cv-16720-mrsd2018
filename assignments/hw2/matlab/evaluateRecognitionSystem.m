@@ -80,8 +80,7 @@ function [ ] = evaluate ( test_image_paths       , ...
   results          = zeros  ( n_images , 2 );
 
   parfor i = 1 : n_images
-    img_path = char ( strcat    ( '../data/' , test_image_paths ( i ) ) )
-    img_path
+    img_path = char ( strcat    ( '../data/' , test_image_paths ( i ) ) );
     img      = imread           ( img_path );
     wordMap  = getVisualWords   ( img , dictionary, filterBank );
     h        = getImageFeatures ( wordMap , size ( dictionary , 1 ) );
@@ -100,6 +99,8 @@ function [ ] = evaluate ( test_image_paths       , ...
   for i = 1 : n_images
     actual_label    = results ( i , 1 );
     predicted_label = results ( i , 2 );
+    confusion_matrix ( actual_label , predicted_label ) = ...
+      1 + confusion_matrix ( actual_label , predicted_label );
   end
   diagonals = sub2ind ( size ( confusion_matrix ) , ...
                         1 : dictionary_size       , ...
