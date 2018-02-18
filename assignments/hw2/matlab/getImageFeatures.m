@@ -9,7 +9,8 @@ function [h] = getImageFeatures(wordMap, dictionarySize)
   %   h:                  the feature vector for this image
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-  h = histcounts (  wordMap , 1 : dictionarySize )
+  %histcounts high range is non-inclusive so +1
+  h = histcounts (  wordMap , 1 : ( dictionarySize + 1 ) )
   h = h / sum ( h )
 
 end
