@@ -25,10 +25,10 @@ parpool('local', numCores);
 
 %load the files and texton dictionary
 load('../data/traintest.mat','all_imagenames','mapping');
-%load('dictionaryHarris.mat');
+load('dictionaryHarris.mat');
 
 %uncomment the following line to run the random version
- load('dictionaryRandom.mat');
+% load('dictionaryRandom.mat');
 
 filterBank = createFilterBank()
 
