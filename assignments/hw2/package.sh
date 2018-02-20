@@ -25,8 +25,8 @@ cp -r matlab $OUTPUTDIR
 cp -r ec     $OUTPUTDIR
 pdflatex doc/${INPUT}.tex -o ${OUTPUT}.pdf
 mv ${OUTPUT}.pdf $OUTPUTDIR
-rm ${OUTPUTDIR}/matlab/houghScript*
-rm ${OUTPUTDIR}/matlab/drawLine.m
+rm ${OUTPUTDIR}/matlab/e2e.m
+rm ${OUTPUTDIR}/matlab/filter_viz.m
 
 ################################################################################
 ###package######################################################################
@@ -43,30 +43,28 @@ zip -r ${OUTPUTDIR}.zip $OUTPUTDIR
 #rm *.aux
 #rm *.log
 
-RGB2Lab.m
-batchToVisualWords.m
-buildRecognitionSystem.m
-createFilterBank.m
-dictionaryHarris.mat
-dictionaryRandom.mat
-evaluateRecognitionSystem.m
-extractFilterResponses.m
-getDictionary.m
-getHarrisPoints.m
-getImageDistance.m
-getImageFeatures.m
-getRandomPoints.m
-getVisualWords.m
-visionHarris.mat
-visionRandom.mat
-computeDictionary.m
+#Expected Matlab files:
+#RGB2Lab.m
+#batchToVisualWords.m
+#buildRecognitionSystem.m
+#createFilterBank.m
+#dictionaryHarris.mat
+#dictionaryRandom.mat
+#evaluateRecognitionSystem.m
+#extractFilterResponses.m
+#getDictionary.m
+#getHarrisPoints.m
+#getImageDistance.m
+#getImageFeatures.m
+#getRandomPoints.m
+#getVisualWords.m
+#visionHarris.mat
+#visionRandom.mat
+#computeDictionary.m
+#nms.m
+#pdist2_custom.m
 
-confusion_matrix_harris_chi2.mat
-confusion_matrix_harris_euclidean.mat
-confusion_matrix_random_chi2.mat
-confusion_matrix_random_euclidean.mat
-dictionary.mat.attempt1
-e2e.m
-filter_viz.m
-nms.m
-pdist2_custom.m
+#confusion_matrix_harris_chi2.mat
+#confusion_matrix_harris_euclidean.mat
+#confusion_matrix_random_chi2.mat
+#confusion_matrix_random_euclidean.mat
