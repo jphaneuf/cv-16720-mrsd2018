@@ -65,7 +65,6 @@ confusion_matrix_harris_chi2.mat
 confusion_matrix_harris_euclidean.mat
 confusion_matrix_random_chi2.mat
 confusion_matrix_random_euclidean.mat
-dictionary.mat
 dictionary.mat.attempt1
 e2e.m
 filter_viz.m
