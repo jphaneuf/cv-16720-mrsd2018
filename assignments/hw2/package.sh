@@ -24,9 +24,10 @@ mkdir $OUTPUTDIR
 cp -r matlab $OUTPUTDIR
 cp -r ec     $OUTPUTDIR
 pdflatex doc/${INPUT}.tex -o ${OUTPUT}.pdf
-mv ${OUTPUT}.pdf $OUTPUTDIR
+#mv ${OUTPUT}.pdf $OUTPUTDIR
 rm ${OUTPUTDIR}/matlab/e2e.m
 rm ${OUTPUTDIR}/matlab/filter_viz.m
+#evince $OUTPUTDIR/${OUTPUT}.pdf 
 
 ################################################################################
 ###package######################################################################
