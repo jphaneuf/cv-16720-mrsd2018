@@ -27,6 +27,8 @@ function [points] = getHarrisPoints(I, alpha, k)
 
   [ Ix , Iy ] = imgradientxy ( I );
   Ix          = imfilter ( Ix , mf );
+  %Ix          = Ix - mean ( reshape ( Ix , 1 , [] ) );
+  %Iy          = Iy - mean ( reshape ( Iy , 1 , [] ) );
   Iy          = imfilter ( Iy , mf );
 
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
