@@ -10,8 +10,8 @@ imgPaths = train_imagenames;
 alpha    = 400;
 K        = 50;
 
-dictionary = getDictionary(imgPaths, alpha, K, 'harris');
-save( './dictionaryHarris' , 'dictionary' )
+%dictionary = getDictionary(imgPaths, alpha, K, 'harris');
+%save( './dictionaryHarris' , 'dictionary' )
 
 dictionary = getDictionary(imgPaths, alpha, K, 'random');
 save( './dictionaryRandom' , 'dictionary' )
