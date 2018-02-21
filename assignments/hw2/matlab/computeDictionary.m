@@ -6,8 +6,8 @@
 parpool('local',18)
 load('../data/traintest');
 imgPaths = train_imagenames;
-alpha    = 200;
-K        = 200;
+alpha    = 300;
+K        = 300;
 
 dictionary = getDictionary(imgPaths, alpha, K, 'harris');
 save( './dictionaryHarris' , 'dictionary' )
