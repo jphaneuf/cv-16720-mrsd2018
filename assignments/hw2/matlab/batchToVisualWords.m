@@ -21,7 +21,7 @@ function batchToVisualWords(numCores,dictionary_name)
 
   fprintf('Starting a pool of workers with %d cores\n', numCores);
   % matlabpool('local',numCores);
-  %parpool('local', numCores);
+  parpool('local', numCores);
 
   %load the files and texton dictionary
   load('../data/traintest.mat','all_imagenames','mapping');

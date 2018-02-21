@@ -49,7 +49,8 @@ function [dictionary] = getDictionary(imgPaths, alpha, K, method)
       x              =   corners ( c , 1 );
       y              =   corners ( c , 2 );
       row            =   reshape ( img_filtered( y , x , : ) , 1 , [] );
-      pixelResponses = [ pixelResponses ; row ];
+      %pixelResponses = [ pixelResponses ; row ];
+      pixelResponses ( i , : ) = row;
     end
   end
 
