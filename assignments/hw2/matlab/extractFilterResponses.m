@@ -17,8 +17,15 @@ function [filterResponses] = extractFilterResponses(I, filterBank)
         doubleI(:,:,2) = tmp;
         doubleI(:,:,3) = tmp;
     end
-    %[L,a,b] = RGB2Lab(doubleI(:,:,1), doubleI(:,:,2), doubleI(:,:,3));
-    img = RGB2Lab(doubleI(:,:,1), doubleI(:,:,2), doubleI(:,:,3));
+    [L,a,b] = RGB2Lab(doubleI(:,:,1), doubleI(:,:,2), doubleI(:,:,3));
+    L = L / max ( max ( L ) );
+    a = a / max ( max ( a ) );
+    b = b / max ( max ( b ) );
+    %img = RGB2Lab(doubleI(:,:,1), doubleI(:,:,2), doubleI(:,:,3));
+    %img ( : , : , 1 )  = img ( : , : , 1 ) / max ( max ( img ( : , : , 1 )  ) )
+    %img ( : , : , 2 )  = img ( : , : , 2 ) / max ( max ( img ( : , : , 2 )  ) )
+    %img ( : , : , 3 )  = img ( : , : , 3 ) / max ( max ( img ( : , : , 3 )  ) )
+
     h = size(I,1);
     w = size(I,2);
    
@@ -27,10 +34,14 @@ function [filterResponses] = extractFilterResponses(I, filterBank)
     filterResponses = zeros  ( h , w , 3 * n_filters );
 
     for   f  = 1 : n_filters ;
-      for ch = 1 : 3;
-        imgf = imfilter ( img ( : , : ,ch )  , cell2mat ( filterBank ( f ) ) );
-        filterResponses ( : , : , 3 * ( f - 1 ) +  ch ) = imgf;
-      end
+      %imgf( = imfilter ( L , cell2mat ( filterBank ( f ) ) );
+      filterResponses ( : , : , 3 * ( f - 1 ) + 1 ) = imfilter ( L , cell2mat ( filterBank ( f ) ) );
+      filterResponses ( : , : , 3 * ( f - 1 ) + 2 ) = imfilter ( a , cell2mat ( filterBank ( f ) ) );
+      filterResponses ( : , : , 3 * ( f - 1 ) + 3 ) = imfilter ( b , cell2mat ( filterBank ( f ) ) );
+      %for ch = 1 : 3;
+      %  imgf = imfilter ( img ( : , : ,ch )  , cell2mat ( filterBank ( f ) ) );
+      %  filterResponses ( : , : , 3 * ( f - 1 ) +  ch ) = imgf;
+      %end
     end
 
     % ------------------------------------------
