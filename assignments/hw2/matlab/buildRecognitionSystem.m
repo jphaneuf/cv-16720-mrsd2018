@@ -5,6 +5,8 @@
 % stored in visionRandom.mat and visionHarris.mat.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+delete(gcp('nocreate'))
+parpool ('local', 18 )
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Load training images and dictionaries %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -25,6 +27,8 @@ build_labeled_models ( train_imagenames , train_labels , ...
 load ( 'dictionaryRandom' );
 build_labeled_models ( train_imagenames , train_labels , ...
                        dictionary       , filterBank   , 'Random' )
+
+delete(gcp('nocreate'))
 
 
 function [x]  = build_labeled_models ( image_paths , trainLabels , ...

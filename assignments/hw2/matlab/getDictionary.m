@@ -26,13 +26,6 @@ function [dictionary] = getDictionary(imgPaths, alpha, K, method)
     img       = imread ( char ( file_path ) );
 
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    %% Check if image is RGB , convert to gray scale if so %%%%%%%%%%%%%%%%%%%%%
-    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    if length ( size ( img ) ) == 3
-      img = rgb2gray ( img );
-    end
-
-    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     %% Find points of interest on each image in imgPaths %%%%%%%%%%%%%%%%%%%%%%%
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     if     strcmp (method , 'harris' )
@@ -49,7 +42,7 @@ function [dictionary] = getDictionary(imgPaths, alpha, K, method)
       x              =   corners ( c , 1 );
       y              =   corners ( c , 2 );
       row            =   reshape ( img_filtered( y , x , : ) , 1 , [] );
-      pixelResponses = [ pixelResponses ; row ];
+      pixelResponses ( i , : ) = row;
     end
   end
 
