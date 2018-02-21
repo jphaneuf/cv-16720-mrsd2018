@@ -3,11 +3,12 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+delete(gcp('nocreate'))
 parpool('local',18)
 load('../data/traintest');
 imgPaths = train_imagenames;
-alpha    = 300;
-K        = 300;
+alpha    = 400;
+K        = 50;
 
 dictionary = getDictionary(imgPaths, alpha, K, 'harris');
 save( './dictionaryHarris' , 'dictionary' )
