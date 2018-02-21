@@ -17,9 +17,9 @@ function [wordMap] = getVisualWords(I, dictionary, filterBank)
   %% Convert to grayscale , get image dimensions %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-  if length ( size ( I ) ) == 3
-    I = rgb2gray ( I );
-  end
+  %if length ( size ( I ) ) == 3
+  %  I = rgb2gray ( I );
+  %end
   h = size  ( I , 1 );
   w = size  ( I , 2 );
 

@@ -28,9 +28,9 @@ function [dictionary] = getDictionary(imgPaths, alpha, K, method)
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     %% Check if image is RGB , convert to gray scale if so %%%%%%%%%%%%%%%%%%%%%
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    if length ( size ( img ) ) == 3
-      img = rgb2gray ( img );
-    end
+    %if length ( size ( img ) ) == 3
+    %  img = rgb2gray ( img );
+    %end
 
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     %% Find points of interest on each image in imgPaths %%%%%%%%%%%%%%%%%%%%%%%
@@ -57,6 +57,7 @@ function [dictionary] = getDictionary(imgPaths, alpha, K, method)
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   %% Cluster pixel feature vectors %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  save ('pixelResponses' , 'pixelResponses' )
   [ ~ , dictionary ] = kmeans ( pixelResponses , K , 'EmptyAction' , 'drop');
     
 end
