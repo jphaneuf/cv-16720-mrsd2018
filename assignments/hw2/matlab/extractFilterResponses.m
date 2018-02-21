@@ -18,9 +18,9 @@ function [filterResponses] = extractFilterResponses(I, filterBank)
         doubleI(:,:,3) = tmp;
     end
     [L,a,b] = RGB2Lab(doubleI(:,:,1), doubleI(:,:,2), doubleI(:,:,3));
-    L = L / max ( max ( L ) );
-    a = a / max ( max ( a ) );
-    b = b / max ( max ( b ) );
+    %L = L / max ( max ( L ) );
+    %a = a / max ( max ( a ) );
+    %b = b / max ( max ( b ) );
     %img = RGB2Lab(doubleI(:,:,1), doubleI(:,:,2), doubleI(:,:,3));
     %img ( : , : , 1 )  = img ( : , : , 1 ) / max ( max ( img ( : , : , 1 )  ) )
     %img ( : , : , 2 )  = img ( : , : , 2 ) / max ( max ( img ( : , : , 2 )  ) )
