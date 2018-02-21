@@ -83,50 +83,56 @@ saveas ( gcf , '../doc/img/q13_harris.png' )
 figure 
 
 subplot(2 , 3 , 1 )
-load ( '../doc/q21data/random/rainforest/sun_aacykkmwtykjfldf.mat' )
+load ('../doc/q21data/random/rainforest/sun_aacykkmwtykjfldf.mat' )
 imshow( label2rgb ( wordMap ) )
 ylabel('rainforest')
 subplot(2 , 3 , 2 )
-load ( '../doc/q21data/random/rainforest/sun_absitpbkzyrvmnem.mat' )
+load ('../doc/q21data/random/rainforest/sun_aaispeummyknccnf.mat' )
 imshow( label2rgb ( wordMap ) )
 subplot(2 , 3 , 3 )
-load ( '../doc/q21data/random/rainforest/sun_abafooecdwxfwlob.mat' )
+load ('../doc/q21data/random/rainforest/sun_aalbylumieujfxrc.mat' )
 imshow( label2rgb ( wordMap ) )
 
+
+
+
 subplot(2 , 3 , 4 )
-load ( '../doc/q21data/random/airport/sun_aexxslabfmbsumkp.mat' )
+load ('../doc/q21data/random/airport/sun_aetygbcukodnyxkl.mat' )
 imshow( label2rgb ( wordMap ) )
 ylabel('airport')
 subplot(2 , 3 , 5 )
-load ( '../doc/q21data/random/airport/sun_aevitxnlfjzhdnti.mat' )
+load ('../doc/q21data/random/airport/sun_aerinlrdodkqnypz.mat' )
 imshow( label2rgb ( wordMap ) )
 subplot(2 , 3 , 6 )
-load ( '../doc/q21data/random/airport/sun_aerinlrdodkqnypz.mat' )
+load ('../doc/q21data/random/airport/sun_aesovualhburmfhn.mat' )
 imshow( label2rgb ( wordMap ) )
 saveas ( gcf , '../doc/img/q21_wordmap_random.png' )
 
 
 figure 
 
+
 subplot(2 , 3 , 1 )
-load ( '../doc/q21data/harris/rainforest/sun_aacykkmwtykjfldf.mat' )
+load ('../doc/q21data/harris/rainforest/sun_aacykkmwtykjfldf.mat' )
 imshow( label2rgb ( wordMap ) )
 ylabel('rainforest')
 subplot(2 , 3 , 2 )
-load ( '../doc/q21data/harris/rainforest/sun_absitpbkzyrvmnem.mat' )
+load ('../doc/q21data/harris/rainforest/sun_aaispeummyknccnf.mat' )
 imshow( label2rgb ( wordMap ) )
 subplot(2 , 3 , 3 )
-load ( '../doc/q21data/harris/rainforest/sun_abafooecdwxfwlob.mat' )
+load ('../doc/q21data/harris/rainforest/sun_aalbylumieujfxrc.mat' )
 imshow( label2rgb ( wordMap ) )
 
 subplot(2 , 3 , 4 )
-load ( '../doc/q21data/harris/airport/sun_aexxslabfmbsumkp.mat' )
+load ('../doc/q21data/harris/airport/sun_aetygbcukodnyxkl.mat' )
 imshow( label2rgb ( wordMap ) )
 ylabel('airport')
 subplot(2 , 3 , 5 )
-load ( '../doc/q21data/harris/airport/sun_aetygbcukodnyxkl.mat' )
+load ('../doc/q21data/harris/airport/sun_aerinlrdodkqnypz.mat' )
 imshow( label2rgb ( wordMap ) )
 subplot(2 , 3 , 6 )
-load ( '../doc/q21data/harris/airport/sun_aerinlrdodkqnypz.mat' )
+load ('../doc/q21data/harris/airport/sun_aesovualhburmfhn.mat' )
 imshow( label2rgb ( wordMap ) )
 saveas ( gcf , '../doc/img/q21_wordmap_harris.png' )
+
+
