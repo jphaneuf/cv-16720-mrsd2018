@@ -26,8 +26,8 @@ function batchToVisualWords(numCores)
 
   %load the files and texton dictionary
   load('../data/traintest.mat','all_imagenames','mapping');
-  load ( dictionary_name );
-  %load('dictionaryHarris.mat');
+  %load ( dictionary_name );
+  load('dictionaryHarris.mat');
   %uncomment the following line to run the random version
   % load('dictionaryRandom.mat');
 
