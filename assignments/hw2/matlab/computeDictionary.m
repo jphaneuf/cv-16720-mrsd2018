@@ -3,8 +3,8 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-delete(gcp('nocreate'))
-parpool('local',18)
+%delete(gcp('nocreate'))
+%parpool('local',18)
 load('../data/traintest');
 imgPaths = train_imagenames;
 alpha    = 200;

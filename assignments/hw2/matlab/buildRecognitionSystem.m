@@ -5,8 +5,8 @@
 % stored in visionRandom.mat and visionHarris.mat.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-delete(gcp('nocreate'))
-parpool ('local', 18 )
+%delete(gcp('nocreate'))
+%parpool ('local', 18 )
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% Load training images and dictionaries %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
