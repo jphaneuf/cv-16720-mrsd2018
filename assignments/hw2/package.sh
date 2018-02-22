@@ -27,6 +27,7 @@ pdflatex doc/${INPUT}.tex -o ${OUTPUT}.pdf
 #mv ${OUTPUT}.pdf $OUTPUTDIR
 rm ${OUTPUTDIR}/matlab/e2e.m
 rm ${OUTPUTDIR}/matlab/filter_viz.m
+rm ${OUTPUTDIR}/matlab/runall.m
 
 ################################################################################
 ###package######################################################################
