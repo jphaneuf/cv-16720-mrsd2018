@@ -36,11 +36,9 @@ function [grad_W, grad_b] = Backward(W, b, X, Y, act_h, act_a)
     else
       z = act_h { i - 1 };
     end
-    grad_w { i } = err * z'
+    grad_W { i } = err * z'
       
   end
   
-  grad_W = 0;
-  grad_b = 0;
 
 end
