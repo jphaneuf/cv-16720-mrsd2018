@@ -13,14 +13,11 @@ function [accuracy, loss] = ComputeAccuracyAndLoss(W, b, data, labels)
   %% compute predictions , extract predictions as maximum probability %%%%%%%%%%
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   [ classifications ] = Classify ( W , b , data );
-  [ val predictions ] = max ( classifications , [ ] ,2 );
   
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   %% Label vectors are one hot, so zeros cancel except for actual label %%%%%%%%
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-  % labels should be one hot. 
-  loss =  - log ( classifications .* labels ) ;
-  loss = mean ( loss ( ~isinf ( loss ) ) );
+  loss = mean ( - sum ( labels .* log ( classifications ) , 2 ));
   
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   %% Get actual label at predicted ( 1 if success , 0 if not ) %%%%%%%%%%%%%%%%%
