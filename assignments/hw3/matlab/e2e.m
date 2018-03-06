@@ -28,7 +28,7 @@ learning_rate = 0.1;
 
 [W, b] = Train(W, b, data, train_label, learning_rate);
 
-[ labeled_data ] = Apply(W, b, data, train_label);
+[ labeled_data ] = Classify(W, b, data);
 
 [ val ind_y ]    = max ( train_label , [] , 2);
 [ val ind_yhat ] = max ( labeled_data , [] , 2);
