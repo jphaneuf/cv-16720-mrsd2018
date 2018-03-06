@@ -9,15 +9,18 @@ function [out, act_h, act_a] = Forward(W, b, X)
 
   [ x nlayers ] = size ( W );
   nhidden = nlayers - 1 ;
-  act_a = cell ( nhidden , 1 );
-  act_h = cell ( nhidden , 1 );
+  act_a = cell ( nlayers , 1 );
+  act_h = cell ( nlayers , 1 );
 
   act_h{1} = X; % Use X for first input
-  for i = 1 : nhidden
+  %for i = 1 : nhidden
+  for i = 1 : nlayers
     act_a{i} = W{i} * act_h{max ( i - 1 , 1 )} + b{i};
     act_h{i} = sigmoid ( act_a{i} );
   end
+
   out = softmax ( W{nlayers} * act_h{nlayers -1} + b{nlayers} );
+
 end
 
 function [ x ] = sigmoid ( x )
