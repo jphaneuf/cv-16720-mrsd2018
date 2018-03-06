@@ -7,7 +7,7 @@ function [grad_W, grad_b] = Backward(W, b, X, Y, act_h, act_a)
   %     of sizes Nx1 and Cx1 respectively
   %   - 'act_h' and 'act_a' the network layer pre and post activations when forward
   %     forward propogating the input smaple 'X'
-  [ n_layers garbage ] = size ( act_h )
+  [ n_layers garbage ] = size ( act_h );
   grad_W         = cell   ( 1 , n_layers );
   grad_b         = cell   ( 1 , n_layers );
 
@@ -36,7 +36,7 @@ function [grad_W, grad_b] = Backward(W, b, X, Y, act_h, act_a)
     else
       z = act_h { i - 1 };
     end
-    grad_W { i } = err * z'
+    grad_W { i } = err * z' ;
       
   end
   
