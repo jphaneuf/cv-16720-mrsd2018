@@ -12,7 +12,7 @@ function [accuracy, loss] = ComputeAccuracyAndLoss(W, b, data, labels)
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   %% compute predictions , extract predictions as maximum probability %%%%%%%%%%
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-  classifications     = Classify ( W , b , data );
+  [ classifications ] = Classify ( W , b , data );
   [ val predictions ] = max ( classifications , [ ] ,2 );
   
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -25,8 +25,10 @@ function [accuracy, loss] = ComputeAccuracyAndLoss(W, b, data, labels)
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   %% Get actual label at predicted ( 1 if success , 0 if not ) %%%%%%%%%%%%%%%%%
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-  [ x labels ] = ind2sub ( size ( labels ) , find ( labels ) );
-  accuracy = sum ( labels == predictions ) / n_points;
+  %% Convert one hot and soft max outputs to numeric class %%%%%%%%%%%%%%%%%%%%%
+  [ val y    ] = max ( labels          , [] , 2);
+  [ val yhat ] = max ( classifications , [] , 2);
+  accuracy     = sum ( y  == yhat ) / n_points;
 
 end
 
