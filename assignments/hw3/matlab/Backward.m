@@ -23,13 +23,14 @@ function [grad_W, grad_b] = Backward(W, b, X, Y, act_h, act_a)
   %grad_C =  out - Y;
   out = act_h{n_layers} ;
   grad_C =  out - Y;
-  err  =  out .* grad_C ;
+  %err  =  out .* grad_C ;
+  err  =  dsigma (act_a{n_layers-1}) .* grad_C ;
   grad_b{ n_layers } = err ;
   grad_W{ n_layers } = err * act_h{ n_layers - 1 }' ;
  
   %% 3. Back propogate errors for other layers %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   for i = fliplr ( 1 : n_layers -1 )
-    err = ( W{i+1}' * err ) .* act_h{i};
+    err = ( W{i+1}' * err ) .* dsigma ( act_a{i} );
     grad_b { i } = err;
     if i == 1
       z = X;
@@ -39,6 +40,5 @@ function [grad_W, grad_b] = Backward(W, b, X, Y, act_h, act_a)
     grad_W { i } = err * z' ;
       
   end
-  
 
 end
