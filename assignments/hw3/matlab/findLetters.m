@@ -44,9 +44,16 @@ function [lines, bw] = findLetters( img )
   end
   lines = cell ( cleval.OptimalK , 1)
   for i = 1 : cleval.OptimalK
-    li = 1
+    li = 1;
     for l = find ( ks == i ) %real indices
-      letters{li} = bounding_boxes ( l , : );
+      boxes = bounding_boxes ( l , : );
+      for b = 1 : length ( boxes )
+        box = boxes ( b , : );
+        box = bbox2points ( box );
+        box = box ( [ 1 5 3 7 ] ); %convert to upper left lower right
+        boxes ( b , : ) = box
+      end
+      letters{li} = boxes;
       li = li+1
     end
     lines{i} = letters
