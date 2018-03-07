@@ -42,22 +42,22 @@ function [lines, bw] = findLetters( img )
     x = [ 1 , cols ];
     plot ( x , ones ( 1 , 2 ) * ys ( i ) );
   end
-  lines = cell ( cleval.OptimalK , 1)
+  lines = cell ( cleval.OptimalK , 1);
   for i = 1 : cleval.OptimalK
     li = 1;
     for l = find ( ks == i ) %real indices
       boxes = bounding_boxes ( l , : );
-      [ n_boxes x ] = size ( boxes )
+      [ n_boxes x ] = size ( boxes );
       %for b = 1 : length ( boxes )
       for b = 1 : n_boxes
         box = boxes ( b , : );
         box = bbox2points ( box );
         box = box ( [ 1 5 3 7 ] ); %convert to upper left lower right
-        boxes ( b , : ) = box
+        boxes ( b , : ) = box;
       end
       letters{li} = boxes;
-      li = li+1
+      li = li+1;
     end
-    lines{i} = letters
+    lines{i} = letters;
   end
 end
