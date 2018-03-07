@@ -9,6 +9,7 @@ function [text] = extractImageText(fname)
    
   load('nist26_model');
   characters = {};
+  text = '';
   for line = 1: length ( lines ) %horizontal line
     %for letter = 1 : length ( line )
     letter_boxes = lines{line}{1};
@@ -23,17 +24,18 @@ function [text] = extractImageText(fname)
         X = reshape ( ch , [] , 1 );
         [out, act_h, act_a] = Forward(W, b, X);
         [val label] = max ( out );
-        label
-        fprintf('detected character %s', char ( 64 + label ) );
-        char ( 65 + label );
+        %fprintf('detected character %s', char ( 64 + label ) );
+        text = strcat ( text , char ( 64 + label ) );
+        text = strcat ( text , " "  );
         
-        imshow ( ch , []);
-        pause ( 2 )
+        %imshow ( ch , []);
+        %pause ( 2 )
         %%% rectangle form for plotting bounding boxes : [x y w h]:
         %boxx = [box(1) , box(2) , (box(3)-box(1)) , (box(4) - box(2)) ];
         %rectangle('pos' , boxx );
       end
     end
+    text = strcat ( text, ' \n');
   end
 end
 
