@@ -17,8 +17,8 @@ function [W, b] = InitializeNetwork(layers)
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   for i = 1 : n_entries -1
     i
-    W { i }         = 0.01 * ( 1 - 2 * rand ( layers ( i + 1 ) , layers ( i ) ) );
-    b { i }         = 0.01 * ( 1 - 2 * rand ( layers ( i + 1 ) , 1 ) );
+    W { i }         = 0.1 * ( 1 - 2 * rand ( layers ( i + 1 ) , layers ( i ) ) );
+    b { i }         = 0.1 * ( 1 - 2 * rand ( layers ( i + 1 ) , 1 ) );
 
   end 
 end
