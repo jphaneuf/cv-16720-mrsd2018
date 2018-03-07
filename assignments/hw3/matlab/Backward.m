@@ -24,7 +24,8 @@ function [grad_W, grad_b] = Backward(W, b, X, Y, act_h, act_a)
   out = act_h{n_layers} ;
   grad_C =  out - Y;
   %err  =  out .* grad_C ;
-  err  =  dsigma (act_a{n_layers}) .* grad_C ;
+  %err  =  dsigma (act_a{n_layers}) .* grad_C ;
+  err  =   grad_C ;
   grad_b{ n_layers } = err ;
   grad_W{ n_layers } = err * act_h{ n_layers - 1 }' ;
  
