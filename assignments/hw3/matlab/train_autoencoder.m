@@ -1,5 +1,7 @@
 % TODO: load training dataset
-
+load('../data/nist26_train.mat', 'train_data', 'train_labels')
+load('../data/nist26_test.mat', 'test_data', 'test_labels')
+load('../data/nist26_valid.mat', 'valid_data', 'valid_labels')
 % TODO: reshape and adjust the dimensions to be in the order of [height,width,1,sample_index]
 
 layers = define_autoencoder();
@@ -13,6 +15,4 @@ options = trainingOptions('sgdm',...
                           'VerboseFrequency',20);
 
 % TODO: run trainNetwork()
-net = trainNetwork(..);
-
-                      
+[ net tr ]  = trainNetwork(layers , train_data , train_labels)

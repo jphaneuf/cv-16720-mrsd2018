@@ -1,7 +1,7 @@
 function layers = define_autoencoder()
 
 layers = [
-    imageInputLayer([32,32,1])
+    imageInputLayer([32,32,1]) % H W channels
     % intermediate layers go between here ...
     conv2D(4,1,8,1,2)
     conv2D(4,8,16,1,2)
