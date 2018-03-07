@@ -29,13 +29,13 @@ function [lines, bw] = findLetters( img )
     img_char = imerode  ( img_char , DF_char );
   end
 
-  imshow ( img_char ) ; hold on;
+  %imshow ( img_char ) ; hold on;
   CC = bwconncomp(img_char);
-  S  = regionprops(CC,'Centroid');
+  S = regionprops(CC,'Centroid');
   Z = regionprops ( CC , 'BoundingBox' ) ;
   bounding_boxes = reshape ( [Z.BoundingBox] , 4 , [] )';
   centroids = reshape ( [S.Centroid] , 2 , [] )';
-  scatter ( centroids ( : , 1 ) , centroids ( : , 2 ) , 'rx' );
+  %scatter ( centroids ( : , 1 ) , centroids ( : , 2 ) , 'rx' );
   cleval = evalclusters(bounding_boxes ( : , 2 ) ,'gmdistribution','CalinskiHarabasz','KList',[1:30]) ;
   [ ks ys ] = kmeans ( bounding_boxes ( : , 2 ) , cleval.OptimalK );
   for i = 1 : cleval.OptimalK
@@ -47,7 +47,9 @@ function [lines, bw] = findLetters( img )
     li = 1;
     for l = find ( ks == i ) %real indices
       boxes = bounding_boxes ( l , : );
-      for b = 1 : length ( boxes )
+      [ n_boxes x ] = size ( boxes )
+      %for b = 1 : length ( boxes )
+      for b = 1 : n_boxes
         box = boxes ( b , : );
         box = bbox2points ( box );
         box = box ( [ 1 5 3 7 ] ); %convert to upper left lower right
