@@ -11,10 +11,11 @@ function [W, b] = Train(W, b, train_data, train_label, learning_rate)
 
   % We overwrite W and b , yes? or is there some batch trickery?
   train_data_size = size(train_data,1);
-  for i = 1:train_data_size
-    rand_index = randi ( [ 1 , train_data_size ] );
-    X = train_data  ( rand_index , : )';
-    Y = train_label ( rand_index , : )' ;
+  %for i = 1:train_data_size
+  for i = randperm ( train_data_size )
+    %rand_index = randi ( [ 1 , train_data_size ] );
+    X = train_data  ( i , : )';
+    Y = train_label ( i , : )' ;
     [ out, act_h, act_a ] = Forward  ( W, b, X );
     [ grad_W , grad_b ]   = Backward ( W, b, X, Y, act_h, act_a);
     [W, b] = UpdateParameters(W, b, grad_W, grad_b, learning_rate);
