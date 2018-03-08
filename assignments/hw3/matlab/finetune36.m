@@ -1,14 +1,21 @@
 num_epoch = 5;
 classes = 36;
-%layers = [32*32, 800, classes];
+layers = [32*32, 800, classes];
 learning_rate = 0.01;
 
 load('../data/nist36_train.mat', 'train_data', 'train_labels')
 load('../data/nist36_test.mat', 'test_data', 'test_labels')
 load('../data/nist36_valid.mat', 'valid_data', 'valid_labels')
 
-%[W, b] = InitializeNetwork(layers);
+[Wi, bi] = InitializeNetwork(layers);
 load('../data/nist26_model_60iters', 'W', 'b')
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% We need to adjust the output layer to have more classes , and random init %%%
+%%% those new weights%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+L =  length(layers)-1;
+W{L}(27:36,:) = Wi{L}(27:36,:);
+b{L}(27:36,:) = bi{L}(27:36,:);
 
 stats = zeros ( 0 , 4 ) % train_acc train_loss valid_acc valid_loss
 for j = 1:num_epoch

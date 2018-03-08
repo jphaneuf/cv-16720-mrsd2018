@@ -52,5 +52,31 @@ montage ( W1m )
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%  montage for nist 36%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%load ('../data/nist26_model_60iters');
+load ('./nist36_model');
+%classes = 36;
+%layers = [32*32, 800, classes];
+%[Wi, bi] = InitializeNetwork(layers);
+%load('../data/nist26_model_60iters', 'W', 'b')
+%L =  length(layers)-1;
+%W{L}(27:36,:) = Wi{L}(27:36,:);
+%b{L}(27:36,:) = bi{L}(27:36,:);
+
+[ nW INPUT ]  = size ( W{1} );
+
+W1 = double ( W{1} );
+W1m = zeros ( [ 32 32 3 800] );
+for i = 1 : nW
+  img = W1 ( i , : );
+  img = img / max ( img ) ;
+  img = reshape ( img , [ 32 32 ] );
+  img = cat ( 3 , img , img , img );
+  W1m ( : , : , : , i ) = img ;
+end
+
+montage ( W1m )
+
+
+
