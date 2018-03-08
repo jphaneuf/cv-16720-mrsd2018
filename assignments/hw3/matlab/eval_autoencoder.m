@@ -10,6 +10,14 @@ test_data  = reshape ( test_data'  , 32 , 32 , 1 , [] );
 
 load('sweet_autoencoder');
 
+[ x y z NDATA ] = size ( test_data );
+psnr_total = 0;
+for i = 1:NDATA
+  img_in  = test_data ( : , : , 1 , i );
+  img_out = predict ( net , img_in );
+  psnr_total = psnr_total + psnr ( double ( img_in ) , double ( img_out ) );
+end
+psnr_total = psnr_total / NDATA
 
 NCHARS = 5;
 NSAMPLES = 2;

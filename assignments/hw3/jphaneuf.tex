@@ -150,9 +150,12 @@ https://www.welovesolo.com/sport-elements-text-mix-vector/
 
 \section{Q5}
 \subsection{Q5.1}
+The define autoencoder script does not reflect the architecture laid out in the homework writeup. Many of the input and output definitions between conolutional layers are incorrect. I modified each layer definition to match the proposed homework writeup architecture.
+
+\subsection{Q5.2.1}
 Using the default settings, I noticed that the autoencoder was unable to converge. With a tweak to the learning rate, the loss and RMSE decreased for 3 epochs, but not close enough to desired RMSE. 
 
-\subsection{Q5.2}
+\subsection{Q5.2.2}
 To drive the error lower, I adjusted the weights in the conv2D weight initialization to a standard deviation of 0.5, adjusted the learning rate to 5e-4 , applied L2 regularization with value 1e-2, and dropped the mini batch size to 5. Figure \ref{fig:nist36confusion} shows the loss and RMS error over 3 epochs of training.
 
 \begin{figure}[H]
@@ -162,7 +165,7 @@ To drive the error lower, I adjusted the weights in the conv2D weight initializa
 \label{fig:nist36confusion}
 \end{figure}   
 
-\subsection{Q5.3}
+\subsection{Q5.3.1}
 The autoencoder outputs ( shown in Figure \ref{fig:autoencout} ) show noisy versions of the original input images, they are however visibly similar to the originals.
 
 \begin{figure}[H]
@@ -172,7 +175,8 @@ The autoencoder outputs ( shown in Figure \ref{fig:autoencout} ) show noisy vers
 \label{fig:autoencout}
 \end{figure}   
 
-\subsection{Q5.4}
+\subsection{Q5.3.2}
+I looped across all images in the test set and applied the autoencoder to each, while accumulating the peak signal-to-noise ratio for each image/encoded image pair.  The average value of the PSNR was 18.0117 dB.
 
 
 \end{document}
