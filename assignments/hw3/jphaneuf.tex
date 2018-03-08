@@ -64,6 +64,7 @@ I chose to initialize weights from a uniform distribution ranging from -0.1 to 0
 \subsection{Q2.4.1}
 Stochastic gradient descent is more robust to non-convex error manifolds , but may take longer to reach minima. Batch gradient descent will typically converge faster given error manifolds that are reasonably convex , but can be more expensive in terms of required RAM.
 
+\section{Q3}
 \subsection{Q3.1.1}
 Figure \ref{fig:accloss} shows the training and validation accuracy and loss while training on the nmist26 dataset.
 \begin{figure}[H]
@@ -141,6 +142,39 @@ Adding more classes to the neural net made classification more difficult and res
 \label{fig:nist36confusion}
 \end{figure}   
 
+\section{Q4}
+\subsection{Q4.1}
+The character extraction technique we will employ has a makes some assumptions for the sake of simplicity, but these assumptions will result in occasional errors. This method makes an assumption that the text will be dark and background light, which may not be the case. This method also assumes that characters will be laid out left to right on horizontal lines, which will not always be the case. Another critical assumption is that only valid characters are present, so punctation or other non-character markings may cause errors.
+https://stackoverflow.com/questions/43888023/how-to-extract-text-from-image-in-java
+https://www.welovesolo.com/sport-elements-text-mix-vector/
+
+\section{Q5}
+\subsection{Q5.1}
+Using the default settings, I noticed that the autoencoder was unable to converge. With a tweak to the learning rate, the loss and RMSE decreased for 3 epochs, but not close enough to desired RMSE. 
+
+\subsection{Q5.2}
+To drive the error lower, I adjusted the weights in the conv2D weight initialization to a standard deviation of 0.5, adjusted the learning rate to 5e-4 , applied L2 regularization with value 1e-2, and dropped the mini batch size to 5. Figure \ref{fig:nist36confusion} shows the loss and RMS error over 3 epochs of training.
+
+\begin{figure}[H]
+\centering
+\includegraphics[page=1,width=0.75\textwidth]{q522_mrse4}
+\caption{ Loss and RMSE for autoencoder training } 
+\label{fig:nist36confusion}
+\end{figure}   
+
+\subsection{Q5.3}
+The autoencoder outputs ( shown in Figure \ref{fig:autoencout} ) show noisy versions of the original input images, they are however visibly similar to the originals.
+
+\begin{figure}[H]
+\centering
+\includegraphics[page=1,width=0.75\textwidth]{q531_auto}
+\caption{ Loss and RMSE for autoencoder training } 
+\label{fig:autoencout}
+\end{figure}   
+
+\subsection{Q5.4}
+
 
 \end{document}
+
 
