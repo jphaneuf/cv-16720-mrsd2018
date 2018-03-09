@@ -18,13 +18,13 @@ function [lines, bw] = findLetters( img )
   img = imcomplement ( img );
   T = adaptthresh(img, 0.5);
   img = imbinarize(img,T);
-  bw       = im2bw ( img  );
   img = double ( img );
 
   img = imgaussfilt(img,2);
   img = bwareaopen(img,1400);
-  bw = img;
   
+
+  bw       = imcomplement ( im2bw ( img  ) );
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   %% Extract character position %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -37,26 +37,26 @@ function [lines, bw] = findLetters( img )
   S = regionprops(CC,'Centroid');
   Z = regionprops ( CC , 'BoundingBox' ) ;
   bounding_boxes = reshape ( [Z.BoundingBox] , 4 , [] )';
-  centroids = reshape ( [S.Centroid] , 2 , [] )';
-  %scatter ( centroids ( : , 1 ) , centroids ( : , 2 ) , 'rx' );
   cleval = evalclusters(bounding_boxes ( : , 2 ) ,'gmdistribution','CalinskiHarabasz','KList',[1:15]) ;
   [ ks ys ] = kmeans ( bounding_boxes ( : , 2 ) , cleval.OptimalK );
   lines = cell ( cleval.OptimalK , 1);
-  for i = 1 : cleval.OptimalK
-    li = 1;
-    for l = find ( ks == i ) %real indices
-      boxes = bounding_boxes ( l , : );
-      [ n_boxes x ] = size ( boxes );
-      %for b = 1 : length ( boxes )
-      for b = 1 : n_boxes
-        box = boxes ( b , : );
-        box = bbox2points ( box );
-        box = box ( [ 1 5 3 7 ] ); %convert to upper left lower right
-        boxes ( b , : ) = box;
-      end
-      letters{li} = boxes;
-      li = li+1;
-    end
-    lines{i} = letters;
+  [ ~ , kindices ] = sort ( ys )
+  for i = kindices'
+    lines{i} = zeros(0,4);
+    line_boxes = bounding_boxes(ks==i,:);
+    %for b = 1 : size ( line_boxes )
+    %  scatter ( line_boxes ( b , 1 ) , line_boxes ( b , 2 ) , 'rx' );
+    %end
+    lines{i} = convert_to_ullr ( line_boxes );
+  end
+end
+
+function [boxes] = convert_to_ullr ( boxes )
+  for b = 1 : size ( boxes , 1 );
+    box = boxes ( b , : );
+    box = bbox2points ( box );
+    % convert to upper left lower right
+    box = box ( [ 1 5 3 7 ] ); 
+    boxes ( b , : ) = box;
   end
 end
