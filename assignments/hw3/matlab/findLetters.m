@@ -19,12 +19,15 @@ function [lines, bw] = findLetters( img )
   T = adaptthresh(img, 0.5);
   img = imbinarize(img,T);
   img = double ( img );
+  bw  = double ( imcomplement ( img ) );
+  bw ( bw < 0.5 ) = 0.05;
+  bw ( bw > 0.95 ) = 0.95;
 
   img = imgaussfilt(img,2);
   img = bwareaopen(img,1400);
   
 
-  bw       = imcomplement ( im2bw ( img  ) );
+  %bw       = imcomplement ( im2bw ( img  ) );
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   %% Extract character position %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -40,7 +43,7 @@ function [lines, bw] = findLetters( img )
   cleval = evalclusters(bounding_boxes ( : , 2 ) ,'gmdistribution','CalinskiHarabasz','KList',[1:15]) ;
   [ ks ys ] = kmeans ( bounding_boxes ( : , 2 ) , cleval.OptimalK );
   lines = cell ( cleval.OptimalK , 1);
-  [ ~ , kindices ] = sort ( ys )
+  [ ~ , kindices ] = sort ( ys );
   for i = kindices'
     lines{i} = zeros(0,4);
     line_boxes = bounding_boxes(ks==i,:);

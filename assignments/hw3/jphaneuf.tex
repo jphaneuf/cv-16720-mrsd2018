@@ -147,6 +147,61 @@ Adding more classes to the neural net made classification more difficult and res
 The character extraction technique we will employ has a makes some assumptions for the sake of simplicity, but these assumptions will result in occasional errors. This method makes an assumption that the text will be dark and background light, which may not be the case. This method also assumes that characters will be laid out left to right on horizontal lines, which will not always be the case. Another critical assumption is that only valid characters are present, so punctation or other non-character markings may cause errors.
 https://stackoverflow.com/questions/43888023/how-to-extract-text-from-image-in-java
 https://www.welovesolo.com/sport-elements-text-mix-vector/
+\subsection{Q4.3}
+Figure \ref{fig:charboxes} shows the script findLetters applied to the four provided test images
+
+\begin{figure}[H]
+\centering
+\includegraphics[page=1,width=0.4\textwidth]{char_boxes}
+\caption{Images with character localization} 
+\label{fig:charboxes}
+\end{figure}   
+
+
+\subsection{Q4.5}
+\textbf { Original text }
+ 
+To Do List  - 1. Make a TO DO LIST  - 2. CHECK OFF THE FIRST - THING ON TO DO LIST - 3. REALIZE YOU HAVE ALREADY COMPLETED 2 THINGS - 4. REWARD YOURSELF WITH A NAP
+
+\bigskip
+
+\textbf { Extracted text }
+
+"C K M P L F T P D M T H I N G I  K E A T K D U L I S T  T H I N G K K I S  T A R P N W A A P R D Y K U S S E L F W I T H  I C H P C K U F F T H E F I T S T  S R I A L I Z E Y K U U V E A L R Q A D Y  T K D K L I S T  N T K U L T  L U A  "
+
+\bigskip
+
+\textbf { Original text }
+
+ABCDEFG - HIJKLMN - OPQRSTU - VWXYZ - 1234567890
+
+\bigskip
+
+\textbf { Extracted text }
+
+"R S T U  H I I K L  N G  B F G  W X  R S T C  M B C D  S G  Z  Q  P Q  V  M N  Y  I Z  "
+
+\bigskip
+
+\textbf { Original text }
+
+HAIKUES ARE EASY - BUT SOMETIMES THEY DONT MAKE SENSE - REFRIGERATOR
+
+\bigskip
+
+\textbf { Extracted text }
+
+"R E F R I G E R A T O R  A R E G A S Y  G U T S C M E T I M E S T H E Y D N T M A K  D E S E N G E  H  U S  A I K  "
+
+\textbf { Original text }
+DEEP LEARNING  - DEEPER LEARNING - DEEPEST LEARNING
+
+\bigskip
+
+\textbf { Extracted text }
+
+"D E E P E R L E A R N I N G  C E B P L E A R M I N G T  S P P T P S P L E A R N I N G  "
+
 
 \section{Q5}
 \subsection{Q5.1}
