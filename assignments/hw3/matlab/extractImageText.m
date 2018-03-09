@@ -19,10 +19,10 @@ function [text] = extractImageText(fname)
         [out, act_h, act_a] = Forward(W, b, X);
         [val label] = max ( out );
         if label < 27
-          fprintf('detected character %s', char ( 64 + label ) );
+          %fprintf('detected character %s', char ( 64 + label ) );
           text = strcat ( text , char ( 64 + label ) );
         else
-          fprintf('detected character %s', char ( 48 + label ) );
+          %fprintf('detected character %s', char ( 48 + label ) );
           text = strcat ( text , char ( 48 + label ) );
         end
         text = strcat ( text , " "  );

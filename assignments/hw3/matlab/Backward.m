@@ -11,20 +11,10 @@ function [grad_W, grad_b] = Backward(W, b, X, Y, act_h, act_a)
   grad_W         = cell   ( 1 , n_layers );
   grad_b         = cell   ( 1 , n_layers );
 
-  %% 1. cut a hole in a box. jk %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-  %% 1. Feed forward %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-  % already done
-
   %% 2. Compute error at final layer %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-  %% d C ( theta ) / d theta = yhat - y  = grad C
-  %% output layer error = grad c element wise multiplied by final layer activation 
 
-  %Todo do this programatically for more layers:
-  %grad_C =  out - Y;
   out = act_h{n_layers} ;
   grad_C =  out - Y;
-  %err  =  out .* grad_C ;
-  %err  =  dsigma (act_a{n_layers}) .* grad_C ;
   err  =   grad_C ;
   grad_b{ n_layers } = err ;
   grad_W{ n_layers } = err * act_h{ n_layers - 1 }' ;
