@@ -43,15 +43,15 @@ function [lines, bw] = findLetters( img )
   cleval = evalclusters(bounding_boxes ( : , 2 ) ,'kmeans','Silhouette','KList',[1:10]) ;
   %cleval = evalclusters(bounding_boxes ( : , 2 ) ,'gmdistribution','CalinskiHarabasz','KList',[1:15]) ;
   [ ks ys ] = kmeans ( bounding_boxes ( : , 2 ) , cleval.OptimalK );
-  lines = cell ( cleval.OptimalK , 1);
+  lines = cell ( 0 );
   [ ~ , kindices ] = sort ( ys );
   for i = kindices'
-    lines{i} = zeros(0,4);
     line_boxes = bounding_boxes(ks==i,:);
     %for b = 1 : size ( line_boxes )
     %  scatter ( line_boxes ( b , 1 ) , line_boxes ( b , 2 ) , 'rx' );
     %end
-    lines{i} = convert_to_ullr ( line_boxes );
+    lines{end+1} = convert_to_ullr ( line_boxes );
+    
   end
 end
 
