@@ -24,12 +24,12 @@ mkdir $OUTPUTDIR
 cp -r matlab $OUTPUTDIR
 cp -r ec     $OUTPUTDIR
 pdflatex ${INPUT}.tex -o ${OUTPUT}.pdf
-mv ${OUTPUT}.pdf $OUTPUTDIR
+#mv ${OUTPUT}.pdf $OUTPUTDIR
 
 
-rm ${OUTPUTDIR}/e2e.m
-rm ${OUTPUTDIR}/*mat
-rm ${OUTPUTDIR}/plotgen.m
+rm ${OUTPUTDIR}/matlab/e2e.m
+rm ${OUTPUTDIR}/matlab/*mat
+rm ${OUTPUTDIR}/matlab/plotgen.m
 
 ################################################################################
 ###package######################################################################
