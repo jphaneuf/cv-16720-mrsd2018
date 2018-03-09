@@ -12,36 +12,35 @@ function [lines, bw] = findLetters( img )
   % be sorted by x1 value.
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   [ rows cols ] = size ( img ) ;
-  DF_char = strel('rectangle',[ 30 , 20 ]);
-  DF_line = strel('rectangle',[ 40 , 300 ]);
+  DF_char = strel('rectangle',[ 20 , 20 ]);
 
+  img = rgb2gray ( img );
+  img = imcomplement ( img );
+  T = adaptthresh(img, 0.5);
+  img = imbinarize(img,T);
   bw       = im2bw ( img  );
-  img      = im2bw ( imcomplement ( img ) );
-  img_char = img;
+  img = double ( img );
 
+  img = imgaussfilt(img,2);
+  img = bwareaopen(img,1400);
+  bw = img;
   
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   %% Extract character position %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
   %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-  for i = 1:5
-    img_char = imdilate ( img_char , DF_char );
-    img_char = imerode  ( img_char , DF_char );
-  end
-
-  %imshow ( img_char ) ; hold on;
-  CC = bwconncomp(img_char);
+  %for i = 1:3
+  %  img = imerode  ( img , DF_char );
+  %  img = imdilate ( img , DF_char );
+  %end
+  CC = bwconncomp(img);
   S = regionprops(CC,'Centroid');
   Z = regionprops ( CC , 'BoundingBox' ) ;
   bounding_boxes = reshape ( [Z.BoundingBox] , 4 , [] )';
   centroids = reshape ( [S.Centroid] , 2 , [] )';
   %scatter ( centroids ( : , 1 ) , centroids ( : , 2 ) , 'rx' );
-  cleval = evalclusters(bounding_boxes ( : , 2 ) ,'gmdistribution','CalinskiHarabasz','KList',[1:30]) ;
+  cleval = evalclusters(bounding_boxes ( : , 2 ) ,'gmdistribution','CalinskiHarabasz','KList',[1:15]) ;
   [ ks ys ] = kmeans ( bounding_boxes ( : , 2 ) , cleval.OptimalK );
-  for i = 1 : cleval.OptimalK
-    x = [ 1 , cols ];
-    plot ( x , ones ( 1 , 2 ) * ys ( i ) );
-  end
   lines = cell ( cleval.OptimalK , 1);
   for i = 1 : cleval.OptimalK
     li = 1;
