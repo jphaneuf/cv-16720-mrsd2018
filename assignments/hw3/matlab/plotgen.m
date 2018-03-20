@@ -1,9 +1,9 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% accuracy and loss plots %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%{
+
 % train_acc train_loss valid_acc valid_loss
-load('statsq313')
+load('statsq321')
 [ n_epochs , nentries ] = size ( stats )
 
 subplot ( 1 , 2 , 1 );
@@ -14,7 +14,7 @@ xlabel('n epochs');
 ylabel('accuracy');
 plot ( 1:n_epochs , stats ( : , 3 ) )
 legend ( 'training accuracy','validation accuracy' )
-title('training accuracy and loss learning 0.001');
+title('training accuracy and loss learning 0.01');
 
 
 subplot ( 1 , 2 , 2 );
@@ -26,8 +26,7 @@ ylabel('cross entropy loss');
 plot ( 1:n_epochs , stats ( : , 4 ) )
 legend ( 'training loss','validation loss' )
 
-%}
-
+return
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% You gotta have a montage %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

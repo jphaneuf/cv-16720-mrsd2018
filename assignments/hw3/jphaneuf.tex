@@ -115,6 +115,15 @@ Figure \ref{fig:initweightviz} shows a graphical confusion matrix for the nist26
 \end{figure}   
 
 \subsection{Q3.2.1}
+Figure \ref{fig:nist36retrain} shows accuracy and loss during retrainining on the nist36 dataset.
+\begin{figure}[H]
+\centering
+\includegraphics[page=1,width=0.75\textwidth]{q321}
+\caption{ Retraining on nist36 } 
+\label{fig:nist36retrain}
+\end{figure}   
+
+
 \subsection{Q3.2.2}
 Figure \ref{fig:nist36preweights} shows the nist36 net's first layer weights after being initialized from nist26model60iters. Figure \ref{fig:nist36retrainweights} shows the net's first layer weights after retraining with hand drawn numbers in addition to letters.
 Each weight image is different, in some cases only slightly different. This is, however, difficult to parse with a feeble human brain. I was unable to pick out distinct features that are clearly associated with numbers.
