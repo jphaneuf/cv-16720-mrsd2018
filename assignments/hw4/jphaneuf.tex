@@ -31,12 +31,12 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Q1}
 \subsection{Q1.1}
-Let us not think about image planes for just a moment. Say P is some 3D point on a plane $\Pi$. We also assign a coordinate frame frame $\Pi$ , and we can use a 4x4 homogeneous transform matrix $H_{\Pi}^{p}$ to express point P in another frame that we will confusingly label p. We can also do this for yet another frame q with $H_{\Pi}^{q}$. These transform matrices encapsulate 3D rotations and translations, and are invertible. If we know P in frame q ( call it $P^{q}$ ) , we can express it in frame p as $P^{p} = H_{\Pi}^{p} H_{q}^{\Pi} P^{q}$. Because we know how to multiply matrices, we can collapse $H_{\Pi}^{p}$ and  $H_{q}^{\Pi}$ into one 4x4 matrix $H_{q}^{p}$.
+Let us not think about image planes for just a moment. Say P is some 3D point on a plane $\Pi$ ( Figure \ref{fig:autoencout} ). We also assign a coordinate frame $\Pi$ , and we can use a 4x4 homogeneous transform matrix $H_{\Pi}^{C1}$ to express point P in another frame that we will label C1. We can also do this for yet another frame C2 with $H_{\Pi}^{C2}$. These transform matrices encapsulate 3D rotations and translations, and are invertible. If we know P in frame C2 ( call it $P^{C2}$ ) , we can express it in frame C1 as $P^{C1} = H_{\Pi}^{C1} H_{C2}^{\Pi} P^{C2}$. Because we know how to multiply matrices, we can collapse $H_{\Pi}^{C1}$ and  $H_{C2}^{\Pi}$ into one 4x4 matrix $H_{C2}^{C1}$.
 
-Since we are arbitrarily assigning frames to things, we say that the Z axis of our $\Pi$ frame is normal to the $\Pi$ plane, and the plane is at Z=0. The consequence of this is that during coordinate transofmrations the Z value of a point on $\Pi$ is always 0, meaning the third column of $H_{q}^{p}$ does absolutely nothing and we can throw it away. Also, we would like to convert to homogeneous 2d coordinates, so the last row of $H_{q}^{p}$ can also be thrown away.
+Since we are arbitrarily assigning frames to things, we say that the Z axis of our $\Pi$ frame is normal to the $\Pi$ plane, and the plane is at Z=0. The consequence of this is that during coordinate transofmrations the Z value of a point on $\Pi$ is always 0, meaning the third column of $H_{C2}^{C1}$ does absolutely nothing and we can throw it away. Also, we would like to convert to homogeneous 2d coordinates, so the last row of $H_{C2}^{C1}$ can also be thrown away.
 
 $$
-H_{q}^{p}=
+H_{C2}^{C1}=
 \begin{bmatrix}
 h_{11} & h_{12} & h_{13} & h_{14} \\
 h_{21} & h_{22} & h_{23} & h_{24} \\
@@ -58,7 +58,7 @@ X \\ Y  \\ 1
 \end{bmatrix}
 $$
 
-So what does this mean? This means we can map a point on a fixed plane from a camera frame to a different camera frame with a 3x3 transform matrix, with the caveat that depth information is not preserved. The intrinsic camera matrices can then be used to map to and from the cameras' respective image planes in homogeneous coordinates, and X,Y values extracted.
+So what does this mean? This means we can map a point on a fixed plane from a camera frame to a different camera frame with a 3x3 transform matrix. The camera projection matrices M1 or M2 can then be used to map to and from the cameras' respective image planes in homogeneous coordinates, and X,Y values extracted.
 
 \begin{figure}[H]
 \centering
@@ -69,39 +69,27 @@ So what does this mean? This means we can map a point on a fixed plane from a ca
 
 
 \subsection{Q1.2}
-Consider two cameras that are separated purely by rotation. That is, the cameras' coordinate frames share an origin and a Z axis, and camera frame 2 is offset from camera frame 1 by a rotation about the Z axis. If we know intrinsic camera parameters ( $K_{1}$ and $K_{2}$ for cameras 1 and 2 ) , we can map points in the cameras' image planes to their respective camera frames. Because the camera frames are separated by a rotation only, the x and y values of a point in frame 1 are only a function of the x and y values of the point in frame 2. Breaking the notation of the homework handout, a point in camera frame 1 can be calculated as a linear function of a point in camera frame 2 like so:
+
+%%%%%%%%%5
+In section 1.1, we proved that a 3x3 homography matrix $\textbf{H}$ exists to map a point on a plane in the world frame from one image plane to another. Part of that process involves using the camera projetion matrices M1 and M2. These matrices are a function of intrinsic camera parameters and external world reference parameters.
+The same applies here, except that M1 must be derived as  
 $$
-\textbf{x}_{1} = 
+\textbf{M}_{1} = 
+\textbf{K}_{1} 
 \begin{bmatrix}
-x_{1} \\ y_{1} \\ 1
-\end{bmatrix}
-=
-\begin{bmatrix}
-f_{x} ( x_{2} , y_{2} ) \\
-f_{y} ( x_{2} , y_{2} ) \\
-1
+\textbf{I} & \textbf{0}
 \end{bmatrix}
 $$
-Which can be written generically as a 3x3 transform matrix:
+And M2 derived as
 $$
-\textbf{x}_{1} = 
+\textbf{M}_{2} = 
+\textbf{K}_{2} 
 \begin{bmatrix}
-h_{11} & h_{12} & h_{13} \\
-h_{21} & h_{22} & h_{23} \\
-0 & 0 & 1
+\textbf{R} & \textbf{0}
 \end{bmatrix}
-\textbf{x}_{2}
 $$
-Note that in this particular situation, this should actually take the form of a 3x3 2 dimensional transform matrix parameterized by an angle $\theta$.
-$$
-\textbf{x}_{1} = 
-\begin{bmatrix}
-cos \theta & 0           & 0 \\
-0          & sin \theta  & 0 \\
-0          & 0           & 1
-\end{bmatrix}
-\textbf{x}_{2}
-$$
+
+With M1 and M2 in hand, the proof in section 1.1 shows that $\textbf{H}$ exists.
 
 \subsection{Q1.3}
 \subsubsection{Q1.3.1}
@@ -232,6 +220,14 @@ $$
 \textbf{A}_{i} 
 \textbf { h } =  \textbf { 0 }
 $$
+
+
+\subsection{Q1.4}
+Consider a camera with static intrinsic parameters. If the camera is rotated around it's center C ( origin of the camera frame ), then the homography matrix $\textbf{H}$ simply defines a rotation around C. If  $\textbf{H}$ is parameterized by an angle $\theta$, then rotating by $\theta$ twice ( $2 \theta$ ) is the same as multiplying by $\textbf{H}$ twice which is simply $\textbf{H}^{2}$.
+
+\subsection{Q1.5}
+Planar homography fails in cases where points are obfuscated in some views and visible in others. Planar homography also relies on the existence of some plane exists in an image, which is not a guarantee.
+\subsection{Q1.6}
+
+
 \end{document}
-
-
