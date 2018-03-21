@@ -16,6 +16,8 @@ def makeTestPattern(patchWidth, nbits):
   # YOUR CODE HERE
   compareX = np.random.randint ( patchWidth ** 2 , size = [ nbits , 1 ] )
   compareY = np.random.randint ( patchWidth ** 2 , size = [ nbits , 1 ] )
+  sio.savemat( 'testPattern.mat' ,
+    { 'compareX' : compareX , 'compareY' : compareY })
   return compareX , compareY 
 
 ################################################################################
@@ -29,9 +31,8 @@ def computeBrief( im , locs , compareA , compareB ):
   desc       = [ ]
   valid_locs = [ ]
   n_features = len ( compareA )
-  #for x , y in locs:
   for loc in locs:
-    x , y = loc
+    y , x = loc
     try:
       feature_vector = np.zeros ( [ n_features , 1 ] )
       for i in range ( n_features ):
@@ -66,21 +67,19 @@ def computeBrief( im , locs , compareA , compareB ):
 
 def briefLite( im ):
   # YOUR CODE HERE
-  patchWidth = 9
-  nbits      = 256
   nms_size   = 1 
-  ca, cb     = makeTestPattern ( patchWidth , nbits       )
-  corners    = corner_peaks    ( corner_harris ( im       ) , 
-                                 min_distance =  nms_size )
-  #ax.plot(coords[ : , 1], coords[:, 0], '.b', markersize=3)
-  #return locs, desc
+  descriptor_dict  = sio.loadmat     ( 'testPattern.mat' )
+  ca               = descriptor_dict [ 'compareX'        ]
+  cb               = descriptor_dict [ 'compareY'        ]
+  corners          = corner_peaks   ( corner_harris ( im ) , 
+                                      min_distance = nms_size )
   locs , desc = computeBrief( im , corners , ca , cb )
   return locs , desc
 
 ################################################################################
 # Q 2.4 ########################################################################
 ################################################################################
-def briefMatch(desc1 , desc2 , ratio=0.8 ):
+def briefMatch( desc1 , desc2 , ratio = 0.8 ):
   # okay so we say we SAY we use the ratio test
   # which SIFT does
   # but come on, I (your humble TA), don't want to.
@@ -100,6 +99,9 @@ def plotMatches(im1,im2,matches,locs1,locs2):
 ################################################################################
 def testMatch():
   # YOUR CODE HERE
+  patchWidth = 9
+  nbits      = 256
+  makeTestPattern ( patchWidth , nbits )
   im1 = rgb2gray ( imread ( '../data/chickenbroth_01.jpg'    ) )
   locs1 , desc1 = briefLite ( im1 )
   im2 = rgb2gray ( imread ( '../data/model_chickenbroth.jpg' ) )
@@ -131,8 +133,5 @@ def briefRotLite(im):
   return locs, desc
 
 if __name__ == "__main__":
-  #img = skimage.io.imread('../data/chickenbroth_01.jpg')
-  #im = skimage.color.rgb2gray(img)
-  #locs , desc = briefLite(im)
   testMatch ( ) 
 
