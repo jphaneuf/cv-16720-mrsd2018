@@ -115,10 +115,26 @@ def testMatch():
 # we're also going to use this to test our
 # extra-credit rotational code
 def briefRotTest(briefFunc=briefLite):
-  # you'll want this
-  import skimage.transform
-  # YOUR CODE HERE
-  
+  from skimage.transform import rotate
+  thetas     = np.arange ( 0 , 181 , 10 )
+  patchWidth = 9
+  nbits      = 256
+  makeTestPattern ( patchWidth , nbits )
+  im1 = rgb2gray ( imread ( '../data/chickenbroth_01.jpg'    ) )
+  locs1 , desc1 = briefFunc ( im1 )
+  im2 = rgb2gray ( imread ( '../data/chickenbroth_01.jpg'    ) )
+
+  data = [ ]
+  for theta in thetas:
+    im2r          = rotate ( im2 , theta )
+    locs2 , desc2 = briefFunc ( im2r )
+    matches       = briefMatch     ( desc1 , desc2 , ratio = 0.8 )
+    plotMatches   ( im1 , im2r , matches , locs1 , locs2 )
+    n = int ( raw_input(' N correct matches ? ' ) )
+    data.append ( [ theta , n ] )
+  return
+  np.savetxt('rottest.csv', data , delimiter=',') 
+ 
   return
 
 # Q2.6
@@ -133,5 +149,5 @@ def briefRotLite(im):
   return locs, desc
 
 if __name__ == "__main__":
-  testMatch ( ) 
-
+  #testMatch ( ) 
+  briefRotTest ( briefLite ) 
