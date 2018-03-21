@@ -150,4 +150,10 @@ def briefRotLite(im):
 
 if __name__ == "__main__":
   #testMatch ( ) 
-  briefRotTest ( briefLite ) 
+  #briefRotTest ( briefLite ) 
+  data = np.genfromtxt ( './rotdata.csv' , delimiter = ',')
+  plt.bar( data [ : , 0 ] / 10.0 , data [ : , 1 ] ,align='center') # A bar chart
+  plt.xlabel('angle ( degrees * 10 ) ')
+  plt.ylabel('Correct matches')
+  plt.show()
+  print data
