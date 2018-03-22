@@ -46,6 +46,20 @@ def computeH(l1, l2):
 def computeHnorm(l1, l2):
   H2to1 = np.eye(3)
   # YOUR CODE HERE
+  l1 = np.copy ( l1 )
+  l2 = np.copy ( l2 )
+  
+  l1 [ : , 0 ] = l1 [ : , 0 ] - np.mean ( l1 [ : , 0 ] )
+  l1 [ : , 1 ] = l1 [ : , 1 ] - np.mean ( l1 [ : , 1 ] )
+  l2 [ : , 0 ] = l2 [ : , 0 ] - np.mean ( l2 [ : , 0 ] )
+  l2 [ : , 1 ] = l2 [ : , 1 ] - np.mean ( l2 [ : , 1 ] )
+
+  l1_max_dist = max ( np.linalg.norm ( l1 [ 0:1 , : ] , axis = 1 ) )
+  l2_max_dist = max ( np.linalg.norm ( l2 [ 0:1 , : ] , axis = 1 ) )
+  l1 = l1 / float ( l1_max_dist )
+  l2 = l2 / float ( l2_max_dist )
+
+  H2to1 = computeH ( l1 , l2 )
   
   return H2to1   
 
@@ -73,7 +87,6 @@ def HarryPotterize():
 
 
 if __name__ == "__main__":
-  
   l1 = np.array ( [ [ 1 , 2 , 1 ] , 
                     [ 3 , 4 , 1 ] ,
                     [ 5 , 6 , 1 ] ,
@@ -81,7 +94,8 @@ if __name__ == "__main__":
   l1 = np.array ( [ [ i , 2*i , 1 ] for i in range ( 20 ) ] )
   l2 = l1
   l2 [ : , 0:1 ] = 2 * l2 [ : , 0:1 ]
-  l2 = l2 + np.random.random ( l1.shape )/20
-  H = computeH ( l1 , l2 )
+  l2 = l2 + np.random.random ( l1.shape )/10
+  #H = computeH ( l1 , l2 )
+  H = computeHnorm ( l1 , l2 )
   print l1 [ 1 ]
   print np.dot ( H , l2 [ 1 ] )
