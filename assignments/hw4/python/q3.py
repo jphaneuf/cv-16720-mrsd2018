@@ -1,8 +1,16 @@
 import numpy as np
 import skimage.color
-import skimage.io
-from scipy import linalg
-
+from skimage.io        import imread
+from skimage.color     import rgb2gray
+from skimage.transform import warp
+from scipy             import linalg
+import matplotlib.pyplot as plt
+from q2 import  makeTestPattern, \
+                computeBrief   , \
+                briefLite      , \
+                briefMatch     , \
+                plotMatches    , \
+                testMatch
 
 
 ################################################################################
@@ -56,8 +64,8 @@ def computeHnorm(l1, l2):
 
   l1_max_dist = max ( np.linalg.norm ( l1 [ 0:1 , : ] , axis = 1 ) )
   l2_max_dist = max ( np.linalg.norm ( l2 [ 0:1 , : ] , axis = 1 ) )
-  l1 = l1 / float ( l1_max_dist )
-  l2 = l2 / float ( l2_max_dist )
+  l1 = np.sqrt ( 2 ) * l1 / float ( l1_max_dist )
+  l2 = np.sqrt ( 2 ) * l2 / float ( l2_max_dist )
 
   H2to1 = computeH ( l1 , l2 )
   
@@ -70,7 +78,7 @@ def computeHransac(locs1, locs2):
   NSP       = 4    #number of points to sample
   NI        = 3000 # n iterations
   H_TH      = 10   # threshold to accept elements 7/8 in H
-  THRESHOLD = 0.01  #threshold
+  THRESHOLD = 10  #threshold
   assert locs1.shape == locs2.shape , "location inputs sizes differs"
   ND = locs1.shape [ 0 ]
   
@@ -85,13 +93,34 @@ def computeHransac(locs1, locs2):
     #testi [ li ] = False 
     #testi        = np.arange ( ND ) [ testi ]
 
-    H = computeHnorm  ( l1 , l2 )
+    #H = computeHnorm  ( l1 , l2 )
+    H = computeH  ( l1 , l2 )
+    ## debug############
+    l1p = np.dot ( H , l2.T ).T
+    l1p = l1p / l1p [ : , 2 ] [ : , None ]
+    #print l1 
+    #print l1p
+    ###################
+
+
     
     n_inliers_temp = 0
-    #for i in testi:
     for i in range ( ND ):
-      l1p   = np.dot         ( H   , locs2 [ i ] )
-      error = np.linalg.norm ( l1p - locs2 [ i ] )
+      l1p = np.dot         ( H   , locs2 [ i ] )
+      xp  = l1p [ 0 ] / l1p [ 2 ]
+      yp  = l1p [ 1 ] / l1p [ 2 ]
+      x   = locs1 [ i , 0 ] / locs1 [ i , 2 ] 
+      y   = locs1 [ i , 1 ] / locs1 [ i , 2 ] 
+      
+      #error = np.linalg.norm ( l1p - locs1 [ i ] )
+      error = np.sqrt ( ( x - xp ) ** 2 + ( y - yp ) ** 2 )
+      #print 'error {}'.format ( error )
+      #import pdb;pdb.set_trace ( )
+      #print '###'
+      #print 'xp {} yp {}'.format(xp , yp)
+      #print 'x {} y {}'.format(x , y)
+      #print error
+      #import pdb; pdb.set_trace ( )
       if error < THRESHOLD:
         n_inliers_temp = n_inliers_temp + 1
         
@@ -113,7 +142,60 @@ def HarryPotterize():
   # we use ORB descriptors but you can use something else
   from skimage.feature import ORB,match_descriptors
   # YOUR CODE HERE
+  patchWidth = 9
+  nbits      = 256
+  makeTestPattern ( patchWidth , nbits )
+
+  cvcov         = rgb2gray ( imread ( '../data/cv_cover.jpg' ) )
+  cvdesk        = rgb2gray ( imread ( '../data/cv_desk.png'  ) )
+  urawizardarry = rgb2gray ( imread ( '../data/hp_cover.jpg' ) )
+
+  ##############################################################################
+  ## q2 version with BRIEF #####################################################
+  ##############################################################################
+  """
+  locs1 , desc1 = briefLite ( cvdesk )
+  locs2 , desc2 = briefLite ( cvcov  )
+  #import pdb;pdb.set_trace ( )
+  matches       = briefMatch     ( desc1 , desc2 , ratio = 0.8 )
+  l1 = locs1 [ matches [ : , 0 ] ]
+  l2 = locs2 [ matches [ : , 1 ] ]
+  l1 = np.hstack ( [ l1 , np.ones ( ( len ( l1 ) , 1 ) ) ] )
+  l2 = np.hstack ( [ l2 , np.ones ( ( len ( l2 ) , 1 ) ) ] )
+  """
+
+
+  ##############################################################################
+  ## ORB version ###############################################################
+  ##############################################################################
+  ## Debug note : orb returns row / column
+
+  orb = ORB ( n_keypoints = 200 )
+
+  orb.detect_and_extract ( cvdesk )
+  locs1 = orb.keypoints
+  desc1 = orb.descriptors
+  orb.detect_and_extract ( cvcov )
+  locs2 = orb.keypoints
+  desc2 = orb.descriptors
+
+  matches = match_descriptors ( desc1 , desc2 , cross_check = True )
+  l1 = locs1 [ matches [ : , 0 ] ]
+  l2 = locs2 [ matches [ : , 1 ] ]
+  l1 = np.hstack ( [ l1 , np.ones ( ( len ( l1 ) , 1 ) ) ] )
+  l2 = np.hstack ( [ l2 , np.ones ( ( len ( l2 ) , 1 ) ) ] )
+
+  H , n = computeHransac( l1 , l2 )
+  #locsp = [ np.dot ( H , l2point ) for l2point in l2 ]
+  #import pdb;pdb.set_trace ( )
+  #plotMatches   ( cvdesk , cvcov , matches , locsp , locs2 )
+  print H
+  warped = warp ( urawizardarry , H )
   
+  plt.imshow ( warped )
+  plt.show () 
+  return
+
   return 
 
 
@@ -128,9 +210,9 @@ if __name__ == "__main__":
   l2 = l2 + np.random.random ( l1.shape )/10
   #H = computeH ( l1 , l2 )
   #H = computeHnorm ( l1 , l2 )
-  H , ni = computeHransac( l1 , l2 )
+  #H , ni = computeHransac( l1 , l2 )
   #print H
   #print ni
-  print l1 [ 3 ]
-  print np.dot ( H , l2 [ 3 ] )
-
+  #print l1 [ 3 ]
+  #print np.dot ( H , l2 [ 3 ] )
+  HarryPotterize ( )
