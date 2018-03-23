@@ -89,21 +89,8 @@ def computeHransac(locs1, locs2):
     l1 = locs1 [ li , : ]
     l2 = locs2 [ li , : ]
 
-    #testi        = np.ones ( ND , dtype = bool )
-    #testi [ li ] = False 
-    #testi        = np.arange ( ND ) [ testi ]
-
     #H = computeHnorm  ( l1 , l2 )
     H = computeH  ( l1 , l2 )
-    ## debug############
-    l1p = np.dot ( H , l2.T ).T
-    l1p = l1p / l1p [ : , 2 ] [ : , None ]
-    errors = [ ]
-    #print l1 
-    #print l1p
-    ###################
-
-
     
     n_inliers_temp = 0
     for i in range ( ND ):
@@ -113,15 +100,7 @@ def computeHransac(locs1, locs2):
       x   = locs1 [ i , 0 ] / locs1 [ i , 2 ] 
       y   = locs1 [ i , 1 ] / locs1 [ i , 2 ] 
       
-      #error = np.linalg.norm ( l1p - locs1 [ i ] )
-      error = np.sqrt ( ( x - xp ) ** 2 + ( y - yp ) ** 2 )
-      #print 'error {}'.format ( error )
-      #print '###'
-      #print 'xp {} yp {}'.format(xp , yp)
-      #print 'x {} y {}'.format(x , y)
-      #print error
-      #errors.append  ( error )
-      #import pdb; pdb.set_trace ( )
+      error    = np.sqrt ( ( x - xp ) ** 2 + ( y - yp ) ** 2 )
       if error < THRESHOLD:
         n_inliers_temp = n_inliers_temp + 1
         
@@ -129,14 +108,28 @@ def computeHransac(locs1, locs2):
       inliers = n_inliers_temp
       bestH2to1 = H
   
-  #plt.hist ( errors ) 
-  #plt.show ( )
   return bestH2to1, inliers
 
 # Q3.4
 def compositeH( H2to1, template, img ):
+  
+  ##############################################################################
+  ## composite img #############################################################
   compositeimg = img
-  # YOUR CODE HERE
+
+  ##############################################################################
+  ## Warp Harry Potter and adjust values #######################################
+  ##############################################################################
+  warped       = warp ( template , H2to1  , output_shape = img.shape , 
+                        mode = 'constant' , cval = 0 )
+  warped = 255 * warped / np.max ( warped )
+
+  ##############################################################################
+  ## Extract indices of non-zero Harry pixels , set them in composite ##########
+  ##############################################################################
+  indices      = warped       [ : , : , 0   ] != 0
+  compositeimg = compositeimg [ : , : , 0:3 ] # what is this 4th thing?
+  compositeimg [ indices] = warped [ indices ]
   
   return compositeimg
 
@@ -153,10 +146,11 @@ def HarryPotterize():
   ##############################################################################
   ## Load images / resize ######################################################
   ##############################################################################
-  cvcov         = rgb2gray ( imread ( '../data/cv_cover.jpg' ) )
-  cvdesk        = rgb2gray ( imread ( '../data/cv_desk.png'  ) )
-  urawizardarry = rgb2gray ( imread ( '../data/hp_cover.jpg' ) )
+  cvcov         = imread ( '../data/cv_cover.jpg' )
+  cvdesk        = imread ( '../data/cv_desk.png'  )
+  urawizardarry = imread ( '../data/hp_cover.jpg' ) 
   urawizardarry = resize   ( urawizardarry, cvcov.shape )
+
 
   ##############################################################################
   ## Apply ORB descriptors and find correspondences ############################
@@ -164,10 +158,10 @@ def HarryPotterize():
 
   orb = ORB ( n_keypoints = 1000 )
 
-  orb.detect_and_extract ( cvdesk )
+  orb.detect_and_extract ( rgb2gray ( cvdesk ) )
   locs1 = orb.keypoints
   desc1 = orb.descriptors
-  orb.detect_and_extract ( cvcov )
+  orb.detect_and_extract ( rgb2gray ( cvcov ) )
   locs2 = orb.keypoints
   desc2 = orb.descriptors
 
@@ -195,10 +189,10 @@ def HarryPotterize():
   ##############################################################################
   ## Apply transform ###########################################################
   ##############################################################################
-  warped = warp ( urawizardarry , H , output_shape = cvdesk.shape , )
-  plt.imshow ( cvdesk )
-  plt.imshow ( warped )
+  compositeimg = compositeH( H, urawizardarry , cvdesk)
+  plt.imshow ( compositeimg )
   plt.show () 
+
 
 if __name__ == "__main__":
   """
