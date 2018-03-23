@@ -67,6 +67,37 @@ def computeHnorm(l1, l2):
 def computeHransac(locs1, locs2):
   bestH2to1, inliers = None, None
   # YOUR CODE HERE
+  NSP       = 4    #number of points to sample
+  NI        = 3000 # n iterations
+  H_TH      = 10   # threshold to accept elements 7/8 in H
+  THRESHOLD = 0.01  #threshold
+  assert locs1.shape == locs2.shape , "location inputs sizes differs"
+  ND = locs1.shape [ 0 ]
+  
+  inliers = 0 
+
+  for i in range ( NI ):
+    li = np.random.choice ( range ( ND ) , NSP , replace = False )
+    l1 = locs1 [ li , : ]
+    l2 = locs2 [ li , : ]
+
+    #testi        = np.ones ( ND , dtype = bool )
+    #testi [ li ] = False 
+    #testi        = np.arange ( ND ) [ testi ]
+
+    H = computeHnorm  ( l1 , l2 )
+    
+    n_inliers_temp = 0
+    #for i in testi:
+    for i in range ( ND ):
+      l1p   = np.dot         ( H   , locs2 [ i ] )
+      error = np.linalg.norm ( l1p - locs2 [ i ] )
+      if error < THRESHOLD:
+        n_inliers_temp = n_inliers_temp + 1
+        
+    if n_inliers_temp > inliers:
+      inliers = n_inliers_temp
+      bestH2to1 = H
   
   return bestH2to1, inliers
 
@@ -91,11 +122,15 @@ if __name__ == "__main__":
                     [ 3 , 4 , 1 ] ,
                     [ 5 , 6 , 1 ] ,
                     [ 7 , 8 , 1 ] ] )
-  l1 = np.array ( [ [ i , 2*i , 1 ] for i in range ( 20 ) ] )
+  l1 = np.array ( [ [ i , 2*i , 1 ] for i in range ( 200 ) ] )
   l2 = l1
   l2 [ : , 0:1 ] = 2 * l2 [ : , 0:1 ]
   l2 = l2 + np.random.random ( l1.shape )/10
   #H = computeH ( l1 , l2 )
-  H = computeHnorm ( l1 , l2 )
-  print l1 [ 1 ]
-  print np.dot ( H , l2 [ 1 ] )
+  #H = computeHnorm ( l1 , l2 )
+  H , ni = computeHransac( l1 , l2 )
+  #print H
+  #print ni
+  print l1 [ 3 ]
+  print np.dot ( H , l2 [ 3 ] )
+
