@@ -98,6 +98,7 @@ def computeHransac(locs1, locs2):
     ## debug############
     l1p = np.dot ( H , l2.T ).T
     l1p = l1p / l1p [ : , 2 ] [ : , None ]
+    errors = [ ]
     #print l1 
     #print l1p
     ###################
@@ -115,11 +116,11 @@ def computeHransac(locs1, locs2):
       #error = np.linalg.norm ( l1p - locs1 [ i ] )
       error = np.sqrt ( ( x - xp ) ** 2 + ( y - yp ) ** 2 )
       #print 'error {}'.format ( error )
-      #import pdb;pdb.set_trace ( )
       #print '###'
       #print 'xp {} yp {}'.format(xp , yp)
       #print 'x {} y {}'.format(x , y)
       #print error
+      #errors.append  ( error )
       #import pdb; pdb.set_trace ( )
       if error < THRESHOLD:
         n_inliers_temp = n_inliers_temp + 1
@@ -128,6 +129,8 @@ def computeHransac(locs1, locs2):
       inliers = n_inliers_temp
       bestH2to1 = H
   
+  #plt.hist ( errors ) 
+  #plt.show ( )
   return bestH2to1, inliers
 
 # Q3.4
@@ -140,37 +143,26 @@ def compositeH( H2to1, template, img ):
 
 def HarryPotterize():
   # we use ORB descriptors but you can use something else
-  from skimage.feature import ORB,match_descriptors
-  # YOUR CODE HERE
+  from skimage.feature   import ORB , match_descriptors
+  from skimage.transform import resize
+
   patchWidth = 9
   nbits      = 256
   makeTestPattern ( patchWidth , nbits )
 
+  ##############################################################################
+  ## Load images / resize ######################################################
+  ##############################################################################
   cvcov         = rgb2gray ( imread ( '../data/cv_cover.jpg' ) )
   cvdesk        = rgb2gray ( imread ( '../data/cv_desk.png'  ) )
   urawizardarry = rgb2gray ( imread ( '../data/hp_cover.jpg' ) )
+  urawizardarry = resize   ( urawizardarry, cvcov.shape )
 
   ##############################################################################
-  ## q2 version with BRIEF #####################################################
+  ## Apply ORB descriptors and find correspondences ############################
   ##############################################################################
-  """
-  locs1 , desc1 = briefLite ( cvdesk )
-  locs2 , desc2 = briefLite ( cvcov  )
-  #import pdb;pdb.set_trace ( )
-  matches       = briefMatch     ( desc1 , desc2 , ratio = 0.8 )
-  l1 = locs1 [ matches [ : , 0 ] ]
-  l2 = locs2 [ matches [ : , 1 ] ]
-  l1 = np.hstack ( [ l1 , np.ones ( ( len ( l1 ) , 1 ) ) ] )
-  l2 = np.hstack ( [ l2 , np.ones ( ( len ( l2 ) , 1 ) ) ] )
-  """
 
-
-  ##############################################################################
-  ## ORB version ###############################################################
-  ##############################################################################
-  ## Debug note : orb returns row / column
-
-  orb = ORB ( n_keypoints = 200 )
+  orb = ORB ( n_keypoints = 1000 )
 
   orb.detect_and_extract ( cvdesk )
   locs1 = orb.keypoints
@@ -182,24 +174,34 @@ def HarryPotterize():
   matches = match_descriptors ( desc1 , desc2 , cross_check = True )
   l1 = locs1 [ matches [ : , 0 ] ]
   l2 = locs2 [ matches [ : , 1 ] ]
+
+  ##############################################################################
+  ## Orb returns row / column , following functions expect x / y
+  ##############################################################################
+  l1 = locs1 [ matches [ : , 0 ] ] [ : , : : -1 ]
+  l2 = locs2 [ matches [ : , 1 ] ] [ : , : : -1 ]
+
+  ##############################################################################
+  ## Append 1 => homogenous coordinates ########################################
+  ##############################################################################
   l1 = np.hstack ( [ l1 , np.ones ( ( len ( l1 ) , 1 ) ) ] )
   l2 = np.hstack ( [ l2 , np.ones ( ( len ( l2 ) , 1 ) ) ] )
 
-  H , n = computeHransac( l1 , l2 )
-  #locsp = [ np.dot ( H , l2point ) for l2point in l2 ]
-  #import pdb;pdb.set_trace ( )
-  #plotMatches   ( cvdesk , cvcov , matches , locsp , locs2 )
-  print H
-  warped = warp ( urawizardarry , H )
-  
+  ##############################################################################
+  ## Compute transform #########################################################
+  ##############################################################################
+  H , n = computeHransac( l2 , l1 )
+
+  ##############################################################################
+  ## Apply transform ###########################################################
+  ##############################################################################
+  warped = warp ( urawizardarry , H , output_shape = cvdesk.shape , )
+  plt.imshow ( cvdesk )
   plt.imshow ( warped )
   plt.show () 
-  return
-
-  return 
-
 
 if __name__ == "__main__":
+  """
   l1 = np.array ( [ [ 1 , 2 , 1 ] , 
                     [ 3 , 4 , 1 ] ,
                     [ 5 , 6 , 1 ] ,
@@ -215,4 +217,5 @@ if __name__ == "__main__":
   #print ni
   #print l1 [ 3 ]
   #print np.dot ( H , l2 [ 3 ] )
+  """
   HarryPotterize ( )
