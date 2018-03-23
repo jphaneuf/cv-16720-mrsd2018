@@ -71,8 +71,9 @@ def briefLite( im ):
   descriptor_dict  = sio.loadmat     ( 'testPattern.mat' )
   ca               = descriptor_dict [ 'compareX'        ]
   cb               = descriptor_dict [ 'compareY'        ]
-  corners          = corner_peaks   ( corner_harris ( im ) , 
-                                      min_distance = nms_size )
+  corners          = corner_peaks   ( corner_harris ( im , method = 'eps' ) , 
+                                      min_distance = nms_size , 
+                                      num_peaks = 1000 )
   locs , desc = computeBrief( im , corners , ca , cb )
   return locs , desc
 
