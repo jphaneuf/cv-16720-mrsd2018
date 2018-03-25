@@ -38,8 +38,8 @@ def computeH(l1, l2):
     yp = l1 [ i , 1 ]
     x  = l2 [ i , 0 ]
     y  = l2 [ i , 1 ]
-    x_entry = np.hstack ( [ -x , -y , -1 ,  0 ,  0 ,  0 , x*xp , y*xp , xp ] )
-    y_entry = np.hstack ( [  0 ,  0 ,  0 , -x , -y , -1 , x*yp , y*yp , yp ] )
+    x_entry = np.array ( [ -x , -y , -1 ,  0 ,  0 ,  0 , x*xp , y*xp , xp ] )
+    y_entry = np.array ( [  0 ,  0 ,  0 , -x , -y , -1 , x*yp , y*yp , yp ] )
     # Ai is 2xNH , first row is x_entry, second row y_entry
     A = np.vstack ( [ A , x_entry ] )
     A = np.vstack ( [ A , y_entry ] )
@@ -50,24 +50,86 @@ def computeH(l1, l2):
   
   return H2to1    
 
+def normPoints ( points ):
+  points [ 0 , : ] = points [ 0 , : ] / points [ 2 , : ]
+  points [ 1 , : ] = points [ 1 , : ] / points [ 2 , : ]
+  points [ 2 , : ] = points [ 2 , : ] / points [ 2 , : ]
+  return points
+
+################################################################################
+## Compute matrix to normalize points ##########################################
+################################################################################
+def getNorm ( points ):
+  ## Expect points to be nx3 homogenous fyi ####################################
+  trans           =   np.eye  ( 3                )
+  trans [ 0 , 2 ] = - np.mean ( points [ : , 0 ] )
+  trans [ 1 , 2 ] = - np.mean ( points [ : , 1 ] )
+  ## transpose to apply transform. untranspose to get distance per point. ######
+  ## slice to remove homogenous '1' ############################################
+  points_trans = np.dot         ( trans        , points.T ).T
+  dists        = np.linalg.norm ( points_trans , axis = 1 )
+  max_dist     = np.max     ( dists )
+
+  scale           =   np.eye  ( 3 )
+  scale [ 0 , 0 ] =   np.sqrt ( 2 )  / max_dist
+  scale [ 1 , 1 ] =   np.sqrt ( 2 )  / max_dist
+  H               =   np.dot ( scale , trans )
+  H = H / H [ 2 , 2 ]
+  return np.eye ( 3 ) , points.T
+
+  #return H , normPoints ( np.dot ( H , points.T ) )
+  return H , np.dot ( H , points.T ) #normPoints ( np.dot ( H , points.T ) )
+
 # Q 3.2
 def computeHnorm(l1, l2):
+  # Have a Hart...ley et. al.
+  l1 = l1 [ 0:10 , : ]
+  l2 = l2 [ 0:10 , : ]
   H2to1 = np.eye(3)
   # YOUR CODE HERE
   l1 = np.copy ( l1 )
   l2 = np.copy ( l2 )
+
+  H1 , l1norm = getNorm ( l1 )
+  H2 , l2norm = getNorm ( l2 )
+  #print Hbar
+  print ' these should be the same '
+  print np.dot ( H2 , l2.T )
+  print l2norm
+  print ' these should be the same '
+  Hbar = computeH ( l1norm , l2norm )
+  print np.dot ( Hbar , l2norm )
+  print l1norm
+
+  import pdb; pdb.set_trace ( )
+  #print l1
+  #print l2
+
+  print computeH ( l1 , l2 )
+
+  #H2to1 = np.dot ( np.linalg.inv ( H1 ) , Hbar )
+  #H2to1 = np.dot ( H2to1                , H2   )
+  H2to1 = np.dot ( np.linalg.inv ( H1 ) , Hbar )
+  H2to1 = np.dot ( H2to1                , H2   )
+
+  H2to1 = H2to1 / H2to1 [ 2 , 2 ] 
+  #H2to1 = computeH ( l1 , l2 )
+   
+  ##############################################################################
+  ## H1 and H2 subtract mean and scale so avg distance to origin is sqrt ( 2 )##
+  ##############################################################################
   
-  l1 [ : , 0 ] = l1 [ : , 0 ] - np.mean ( l1 [ : , 0 ] )
-  l1 [ : , 1 ] = l1 [ : , 1 ] - np.mean ( l1 [ : , 1 ] )
-  l2 [ : , 0 ] = l2 [ : , 0 ] - np.mean ( l2 [ : , 0 ] )
-  l2 [ : , 1 ] = l2 [ : , 1 ] - np.mean ( l2 [ : , 1 ] )
+  
+  #l1 [ : , 0 ] = l1 [ : , 0 ] - np.mean ( l1 [ : , 0 ] )
+  #l1 [ : , 1 ] = l1 [ : , 1 ] - np.mean ( l1 [ : , 1 ] )
+  #l2 [ : , 0 ] = l2 [ : , 0 ] - np.mean ( l2 [ : , 0 ] )
+  #l2 [ : , 1 ] = l2 [ : , 1 ] - np.mean ( l2 [ : , 1 ] )
 
-  l1_max_dist = max ( np.linalg.norm ( l1 [ 0:1 , : ] , axis = 1 ) )
-  l2_max_dist = max ( np.linalg.norm ( l2 [ 0:1 , : ] , axis = 1 ) )
-  l1 = np.sqrt ( 2 ) * l1 / float ( l1_max_dist )
-  l2 = np.sqrt ( 2 ) * l2 / float ( l2_max_dist )
+  #l1_max_dist = max ( np.linalg.norm ( l1 [ 0:1 , : ] , axis = 1 ) )
+  #l2_max_dist = max ( np.linalg.norm ( l2 [ 0:1 , : ] , axis = 1 ) )
+  #l1 = np.sqrt ( 2 ) * l1 / float ( l1_max_dist )
+  #l2 = np.sqrt ( 2 ) * l2 / float ( l2_max_dist )
 
-  H2to1 = computeH ( l1 , l2 )
   
   return H2to1   
 
@@ -195,15 +257,19 @@ def HarryPotterize():
 
 
 if __name__ == "__main__":
-  """
   l1 = np.array ( [ [ 1 , 2 , 1 ] , 
                     [ 3 , 4 , 1 ] ,
                     [ 5 , 6 , 1 ] ,
                     [ 7 , 8 , 1 ] ] )
   l1 = np.array ( [ [ i , 2*i , 1 ] for i in range ( 200 ) ] )
-  l2 = l1
+  l2 = np.copy ( l1 )
   l2 [ : , 0:1 ] = 2 * l2 [ : , 0:1 ]
   l2 = l2 + np.random.random ( l1.shape )/10
+  l2 [ : , 0 ] = l2 [ : , 0 ] + 20
+  l2 [ : , 1 ] = l2 [ : , 1 ] + 15
+  l1 = np.array ( [(448,67,1),(602,129,1),(362,392,1),(483,494,1)] )
+  l2 = np.array ( [(386,78,1),(552,78,1),(386,453,1),(552,453,1)] )
+  computeHnorm( l1 , l2 )
   #H = computeH ( l1 , l2 )
   #H = computeHnorm ( l1 , l2 )
   #H , ni = computeHransac( l1 , l2 )
@@ -211,5 +277,4 @@ if __name__ == "__main__":
   #print ni
   #print l1 [ 3 ]
   #print np.dot ( H , l2 [ 3 ] )
-  """
-  HarryPotterize ( )
+  #HarryPotterize ( )
