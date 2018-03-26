@@ -121,11 +121,30 @@ def imageStitching_noClip(img1, img2, H2to1, panoWidth=1280):
 
 # Q 4.3
 # should return a stitched image
-def generatePanorama(img1, img2):
-    panoImage = None
-    # YOUR CODE HERE
-    
-    return panoImage
+def generatePanorama( img1 , img2 ):
+
+  patchWidth = 9
+  nbits      = 256
+  makeTestPattern ( patchWidth , nbits )
+  locs1 , desc1 = briefLite ( rgb2gray ( img1 ) )
+  locs2 , desc2 = briefLite ( rgb2gray ( img2 ) )
+  matches       = briefMatch     ( desc1 , desc2 , ratio = 0.8 )
+
+  l1 = locs1 [ matches [ : , 0 ] ]
+  l2 = locs2 [ matches [ : , 1 ] ]
+
+  ## x / y row / column bamboozle ###############################################
+  l1 = locs1 [ matches [ : , 0 ] ] [ : , : : -1 ]
+  l2 = locs2 [ matches [ : , 1 ] ] [ : , : : -1 ]
+  ##############################################################################
+  ## Append 1 => homogenous coordinates ########################################
+  ##############################################################################
+  l1 = np.hstack ( [ l1 , np.ones ( ( len ( l1 ) , 1 ) ) ] )
+  l2 = np.hstack ( [ l2 , np.ones ( ( len ( l2 ) , 1 ) ) ] )
+
+  H2to1 , n = computeHransac( l2 , l1 )
+  panoImage = imageStitching_noClip ( img1 , img2 , H2to1 )
+  return panoImage
 
 # Q 4.5
 # I found it easier to just write a new function
@@ -135,5 +154,3 @@ def generateMultiPanorama(imgs):
     # YOUR CODE HERE
     
     return panoImage
-
-
