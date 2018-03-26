@@ -240,5 +240,99 @@ To test how BRIEF feature mapping works under rotation, I created a script that 
 \end{figure}   
 
 
+\section { Q2 }
+\subsection { Q2.4.1 }
+
+Figure \ref{fig:plotmatch} shows descriptor matches for two similar images of soup. Matching fails when image patches corresponding to different physical features contain similar descriptor information.
+
+\begin{figure}[H]
+\centering
+\includegraphics[page=1,width=0.75\textwidth]{q2_4}
+\caption{ No soup for you }
+\label{fig:plotmatch}
+\end{figure}   
+
+\subsection { Q2.5 }
+
+So far, these BRIEF descriptors have been working well. But how do they operate under rotation? Let's find out! I took an image and tested matches against itself while holding the first instance fixed and rotating the second instance in 10 degree increments from 0 to 180 degrees. I counted matches manually using my human neural network as ground truth, and adjusted thresholding so that fewer matches were produced. Figure \ref{fig:rotbad} shows a histogram of succesful descriptor matches. The histogram shows that fewer correct matches are found as rotation is increased, so BRIEF is not rotation invariant.
+
+\begin{figure}[H]
+\centering
+\includegraphics[page=1,width=0.75\textwidth]{q2_4}
+\caption{ Drop it down, flip it and reverse it }
+\label{fig:rotbad}
+\end{figure}   
+
+
+\section { Q3 }
+Figure \ref{fig:lumos} shows the cover of a Harry Potter book mapped and overlayed onto a book on a desk.
+\begin{figure}[H]
+\centering
+\includegraphics[page=1,width=0.75\textwidth]{q2_4}
+\caption{ Harry Potter book cover mapped to CV book on desk }
+\label{fig:lumos}
+\end{figure}   
+
+The result homography matrix is shown below:
+$$
+H = 
+\begin {bmatrix} 
+2.376   &  0.714  & -696.798 \\
+547.627 &  4.400  & -859.204 \\
+0.00005 &  0.004  & 1.000
+\end {bmatrix} 
+$$
+
+\section { Q4 }
+\subsection { Q4.1 }
+Figure \ref{fig:q41} shows two images taken from a baseball stadium of a skyline merged together into a panorama.
+The resulting homography matrix is shown below:
+$$
+H = 
+\begin {bmatrix}
+1.36e+00  & -3.21e-03 & -1.42e+02 //
+1.54e-01  &  1.20e+00 & -6.97e+00 //
+1.85e-03  & -1.61e-04 &  1.00e+00
+\end {bmatrix}
+$$
+
+\begin{figure}[H]
+\centering
+\includegraphics[page=1,width=0.75\textwidth]{q4_1}
+\caption{ Image 2 warped and overlayed on Image 1 }
+\label{fig:q41}
+\end{figure}   
+
+\subsection { Q4.2 }
+Figure \ref{fig:q42} shows the same two images used in Q4.1 stitched together, with the addition of a feature to automatically control the output shape of the image such that the output image contains the entirety of both images.
+
+\begin{figure}[H]
+\centering
+\includegraphics[page=1,width=0.75\textwidth]{q4_1}
+\caption{ Stitched images without clipping}
+\label{fig:q42}
+\end{figure}   
+
+\subsection { Q4.3 }
+The function created for the previous section was wrapped in a high level function that extracts correspondences, computes homographies, and stitches images. Images incline\_L and incline\_R were stitched together, shown in figure \ref{fig:q4_3}.
+T
+The resulting homography matrix is shown below:
+$$
+H = 
+\begin {bmatrix}
+1.49e+00 &  3.26e-02 & -5.33e+02 //
+1.55e-01 &  1.27e+00 & -1.17e+01 //
+5.64e-04 & -8.95e-05 &  1.00e+00
+\end {bmatrix}
+$$
+
+\begin{figure}[H]
+\centering
+\includegraphics[page=1,width=0.75\textwidth]{q4_3}
+\caption{ Automagic panorama of skyline}
+\label{fig:q42}
+\end{figure}   
+
+
 
 \end{document}
