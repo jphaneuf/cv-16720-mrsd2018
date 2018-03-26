@@ -31,12 +31,13 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Q1}
 \subsection{Q1.1}
-Let us not think about image planes for just a moment. Say P is some 3D point on a plane $\Pi$ ( Figure \ref{fig:autoencout} ). We also assign a coordinate frame $\Pi$ , and we can use a 4x4 homogeneous transform matrix $H_{\Pi}^{C1}$ to express point P in another frame that we will label C1. We can also do this for yet another frame C2 with $H_{\Pi}^{C2}$. These transform matrices encapsulate 3D rotations and translations, and are invertible. If we know P in frame C2 ( call it $P^{C2}$ ) , we can express it in frame C1 as $P^{C1} = H_{\Pi}^{C1} H_{C2}^{\Pi} P^{C2}$. Because we know how to multiply matrices, we can collapse $H_{\Pi}^{C1}$ and  $H_{C2}^{\Pi}$ into one 4x4 matrix $H_{C2}^{C1}$.
+Let us not think about image planes for just a moment. Say P is some 3D point on a plane $\Pi$ ( Figure \ref{fig:autoencout} ). We also assign a coordinate frame $\Pi$ , and we can use a 4x4 homogeneous transform matrix $H_{\Pi}^{C1}$ to express point P in another frame that we will label C1. We can also do this for yet another frame C2 with $H_{\Pi}^{C2}$. These transform matrices encapsulate 3D rotations and translations, and are invertible. 
 
-Since we are arbitrarily assigning frames to things, we say that the Z axis of our $\Pi$ frame is normal to the $\Pi$ plane, and the plane is at Z=0. The consequence of this is that during coordinate transofmrations the Z value of a point on $\Pi$ is always 0, meaning the third column of $H_{C2}^{C1}$ does absolutely nothing and we can throw it away. Also, we would like to convert to homogeneous 2d coordinates, so the last row of $H_{C2}^{C1}$ can also be thrown away.
+Since we are arbitrarily assigning frames to things, we say that the Z axis of our $\Pi$ frame is normal to the $\Pi$ plane, and the plane is at Z=0. The consequence of this is that during coordinate transformations the Z value of a point on $\Pi$ is always 0, meaning the third column of $H_{\Pi}^{C1}$ and $H_{\Pi}^{C2}$ do absolutely nothing and we can throw them away. Also, we would like to convert to homogeneous 2d coordinates, so the last row of both can also be thrown away. This means that there exist 3x3 transform matrices that map 2 dimensional homogeneous coordinates from frame $\Pi$ to frame C1 and from frame $\Pi$ to frame C2, named $\bar{H}_{\Pi}^{C1}$ and $\bar{H}_{\Pi}^{C2}$ respectively. Formulation of the $\bar{H}_{\Pi}^{C1}$ is shown below, and is the same process for $\bar{H}_{\Pi}^{C2}$.
+
 
 $$
-H_{C2}^{C1}=
+H_{\Pi}^{C1}=
 \begin{bmatrix}
 h_{11} & h_{12} & h_{13} & h_{14} \\
 h_{21} & h_{22} & h_{23} & h_{24} \\
@@ -58,7 +59,18 @@ X \\ Y  \\ 1
 \end{bmatrix}
 $$
 
-So what does this mean? This means we can map a point on a fixed plane from a camera frame to a different camera frame with a 3x3 transform matrix. The camera projection matrices M1 or M2 can then be used to map to and from the cameras' respective image planes in homogeneous coordinates, and X,Y values extracted.
+We can therefore combine these matrices to create a transform matrix that transforms a 2 dimensional homogeneous point in frame C2 to frame C1.
+$$
+P^{C1} = 
+\bar{H}_{\Pi}^{C1}
+(\bar{H}_{\Pi}^{C2})^{-1}
+P^{C2}
+=
+\bar{H}_{C2}^{C1}
+P^{C2}
+$$
+
+The camera projection matrices M1 or M2 can then be used to map to and from the cameras' respective image planes in homogeneous coordinates, and X,Y values extracted.
 
 \begin{figure}[H]
 \centering
