@@ -43,7 +43,6 @@ def computeH(l1, l2):
     # Ai is 2xNH , first row is x_entry, second row y_entry
     A = np.vstack ( [ A , x_entry ] )
     A = np.vstack ( [ A , y_entry ] )
-  #A = np.array ( np.hstack ( [ l1 [ 0 ] , l2 [ 0 ] ] ) )
   u , s , v =  np.linalg.svd ( A )
   H2to1 = v [ -1 ].reshape ( ( 3 , 3 ) )
   H2to1 = H2to1 / H2to1[ 2 , 2 ]
@@ -51,6 +50,7 @@ def computeH(l1, l2):
   return H2to1    
 
 def normPoints ( points ):
+  # expects column entries
   points [ 0 , : ] = points [ 0 , : ] / points [ 2 , : ]
   points [ 1 , : ] = points [ 1 , : ] / points [ 2 , : ]
   points [ 2 , : ] = points [ 2 , : ] / points [ 2 , : ]
@@ -59,7 +59,9 @@ def normPoints ( points ):
 ################################################################################
 ## Compute matrix to normalize points ##########################################
 ################################################################################
-def getNorm ( points ):
+def getNorm ( points_in ):
+  points = np.copy ( points_in )
+   
   ## Expect points to be nx3 homogenous fyi ####################################
   trans           =   np.eye  ( 3                )
   trans [ 0 , 2 ] = - np.mean ( points [ : , 0 ] )
@@ -75,62 +77,28 @@ def getNorm ( points ):
   scale [ 1 , 1 ] =   np.sqrt ( 2 )  / max_dist
   H               =   np.dot ( scale , trans )
   H = H / H [ 2 , 2 ]
-  return np.eye ( 3 ) , points.T
 
-  #return H , normPoints ( np.dot ( H , points.T ) )
-  return H , np.dot ( H , points.T ) #normPoints ( np.dot ( H , points.T ) )
+  return H , normPoints ( np.dot ( H , points.T ) )
 
 # Q 3.2
 def computeHnorm(l1, l2):
   # Have a Hart...ley et. al.
-  l1 = l1 [ 0:10 , : ]
-  l2 = l2 [ 0:10 , : ]
-  H2to1 = np.eye(3)
   # YOUR CODE HERE
-  l1 = np.copy ( l1 )
-  l2 = np.copy ( l2 )
+  #import pdb;pdb.set_trace ( )
+  l1c = np.copy ( l1 )
+  l2c = np.copy ( l2 )
 
-  H1 , l1norm = getNorm ( l1 )
-  H2 , l2norm = getNorm ( l2 )
-  #print Hbar
-  print ' these should be the same '
-  print np.dot ( H2 , l2.T )
-  print l2norm
-  print ' these should be the same '
-  Hbar = computeH ( l1norm , l2norm )
-  print np.dot ( Hbar , l2norm )
-  print l1norm
+  H1 , l1norm = getNorm ( l1c )
+  H2 , l2norm = getNorm ( l2c )
 
-  import pdb; pdb.set_trace ( )
-  #print l1
-  #print l2
+  Hbar = computeH ( l1norm.T , l2norm.T )
 
-  print computeH ( l1 , l2 )
-
-  #H2to1 = np.dot ( np.linalg.inv ( H1 ) , Hbar )
-  #H2to1 = np.dot ( H2to1                , H2   )
   H2to1 = np.dot ( np.linalg.inv ( H1 ) , Hbar )
   H2to1 = np.dot ( H2to1                , H2   )
 
   H2to1 = H2to1 / H2to1 [ 2 , 2 ] 
-  #H2to1 = computeH ( l1 , l2 )
-   
-  ##############################################################################
-  ## H1 and H2 subtract mean and scale so avg distance to origin is sqrt ( 2 )##
-  ##############################################################################
-  
-  
-  #l1 [ : , 0 ] = l1 [ : , 0 ] - np.mean ( l1 [ : , 0 ] )
-  #l1 [ : , 1 ] = l1 [ : , 1 ] - np.mean ( l1 [ : , 1 ] )
-  #l2 [ : , 0 ] = l2 [ : , 0 ] - np.mean ( l2 [ : , 0 ] )
-  #l2 [ : , 1 ] = l2 [ : , 1 ] - np.mean ( l2 [ : , 1 ] )
 
-  #l1_max_dist = max ( np.linalg.norm ( l1 [ 0:1 , : ] , axis = 1 ) )
-  #l2_max_dist = max ( np.linalg.norm ( l2 [ 0:1 , : ] , axis = 1 ) )
-  #l1 = np.sqrt ( 2 ) * l1 / float ( l1_max_dist )
-  #l2 = np.sqrt ( 2 ) * l2 / float ( l2_max_dist )
-
-  
+ 
   return H2to1   
 
 # Q 3.3
@@ -151,8 +119,7 @@ def computeHransac(locs1, locs2):
     l1 = locs1 [ li , : ]
     l2 = locs2 [ li , : ]
 
-    #H = computeHnorm  ( l1 , l2 )
-    H = computeH  ( l1 , l2 )
+    H = computeHnorm  ( l1 , l2 )
     
     n_inliers_temp = 0
     for i in range ( ND ):
@@ -255,26 +222,30 @@ def HarryPotterize():
   plt.imshow ( compositeimg )
   plt.show () 
 
-
 if __name__ == "__main__":
+  """
   l1 = np.array ( [ [ 1 , 2 , 1 ] , 
                     [ 3 , 4 , 1 ] ,
                     [ 5 , 6 , 1 ] ,
                     [ 7 , 8 , 1 ] ] )
-  l1 = np.array ( [ [ i , 2*i , 1 ] for i in range ( 200 ) ] )
-  l2 = np.copy ( l1 )
-  l2 [ : , 0:1 ] = 2 * l2 [ : , 0:1 ]
-  l2 = l2 + np.random.random ( l1.shape )/10
-  l2 [ : , 0 ] = l2 [ : , 0 ] + 20
-  l2 [ : , 1 ] = l2 [ : , 1 ] + 15
-  l1 = np.array ( [(448,67,1),(602,129,1),(362,392,1),(483,494,1)] )
-  l2 = np.array ( [(386,78,1),(552,78,1),(386,453,1),(552,453,1)] )
-  computeHnorm( l1 , l2 )
+  """
+  #l1 = np.array ( [ [ i , 2*i , 1 ] for i in range ( 200 ) ] )
+  #l2 = np.copy ( l1 )
+  #l2 [ : , 0:1 ] = 2 * l2 [ : , 0:1 ]
+  #l2 = l2 + np.random.random ( l1.shape )/10
   #H = computeH ( l1 , l2 )
-  #H = computeHnorm ( l1 , l2 )
-  #H , ni = computeHransac( l1 , l2 )
-  #print H
-  #print ni
-  #print l1 [ 3 ]
-  #print np.dot ( H , l2 [ 3 ] )
-  #HarryPotterize ( )
+  ##Sanity check 1
+  """
+  H = computeHnorm ( l1 , l2 )
+  print l1
+  print np.transpose ( normPoints ( np.dot ( H , l2.T )  ) )
+  """
+  #l1c = np.copy ( l1 ) 
+  #print computeHnorm ( l1 , l1c )
+  #print computeHnorm ( l2 , l2 )
+  #l1 = np.array ( [ [ 4 , 6 , 1 ] , [ 6 , 6 , 1] , [ 3 , 3 , 1] , [ 7 , 3 , 1] ] )
+  #l2 = np.array ( [ [ 1 , 5 , 1 ] , [ 3 , 5 , 1] , [ 1 , 1 , 1] , [ 3 , 1 , 1] ] )
+  #print computeHnorm ( l1 , l2 )
+  #print computeH ( l1 , l2 )
+  HarryPotterize ( )
+  
