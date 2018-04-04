@@ -18,7 +18,7 @@
 
 \begin{document}
 
-\title{Joe Phaneuf \\ Computer Vision 16-720 Spring 2018 Homework 3 \\ Mar. 7, 2018 }
+\title{Joe Phaneuf \\ Computer Vision 16-720 Spring 2018 Homework 4 \\ Mar. 26, 2018 }
 \date{}
 \author{}
 \maketitle
@@ -79,7 +79,7 @@ The camera projection matrices M1 or M2 can then be used to map to and from the 
 \label{fig:autoencout}
 \end{figure}   
 
-
+\newpage
 \subsection{Q1.2}
 
 %%%%%%%%%5
@@ -103,11 +103,14 @@ $$
 
 With M1 and M2 in hand, the proof in section 1.1 shows that $\textbf{H}$ exists.
 
+\newpage
 \subsection{Q1.3}
 \subsubsection{Q1.3.1}
 Consider a transform matrix H that maps a point from one image plane to another image plane. Ignoring all other frames ( camera , world, or otherwise ) , 6 degrees of freedom are required to describe the rotation and translation from one frame to another (3 for translation, 3 for rotation). In the case of cameras, changes in focal length will create a scaling effect in the X and Y directions, which amounts to 2 degrees of freedom. All in, that H has 8 degrees of freedom.
+
 \subsubsection{Q1.3.2}
 Each image point contains two pieces of information. 4 points are therefore required to solve for the transformation matrix described in the preceeding subsection.
+
 \subsubsection{Q1.3.3}
 $$
 \textbf{x}^{i}_{1}=
@@ -234,26 +237,23 @@ $$
 $$
 
 
+\newpage
 \subsection{Q1.4}
 Consider a camera with static intrinsic parameters. If the camera is rotated around it's center C ( origin of the camera frame ), then the homography matrix $\textbf{H}$ simply defines a rotation around C. If  $\textbf{H}$ is parameterized by an angle $\theta$, then rotating by $\theta$ twice ( $2 \theta$ ) is the same as multiplying by $\textbf{H}$ twice which is simply $\textbf{H}^{2}$.
 
+
+\newpage
 \subsection{Q1.5}
-Planar homography fails in cases where points are obfuscated in some views and visible in others. Planar homography also relies on the existence of some plane exists in an image, which is not a guarantee.
-\subsection{Q1.6}
+Planar homography fails in cases where points are obfuscated in some views and visible in others. Planar homography also assumes all correspondences fall on the same plane, which is not a guarantee.
 
-\section{Q2}
-\section{Q2.5}
-To test how BRIEF feature mapping works under rotation, I created a script that rotates an image and checks the feature matching every 10 degrees ( matches verified visually ). The number of correct matches is shown against the rotation in Figure \ref{fig:imgrot}.
-\begin{figure}[H]
-\centering
-\includegraphics[page=1,width=0.75\textwidth]{q2_5}
-\caption{ Correct point matches vs. image rotation } 
-\label{fig:imgrot}
-\end{figure}   
-
-
+\newpage
 \section { Q2 }
-\subsection { Q2.4.1 }
+
+\stepcounter{subsection}
+\stepcounter{subsection}
+\stepcounter{subsection}
+\stepcounter{subsection}
+\subsubsection { Q2.4.1 }
 
 Figure \ref{fig:plotmatch} shows descriptor matches for two similar images of soup. Matching fails when image patches corresponding to different physical features contain similar descriptor information.
 
@@ -264,23 +264,24 @@ Figure \ref{fig:plotmatch} shows descriptor matches for two similar images of so
 \label{fig:plotmatch}
 \end{figure}   
 
-\subsection { Q2.5 }
 
-So far, these BRIEF descriptors have been working well. But how do they operate under rotation? Let's find out! I took an image and tested matches against itself while holding the first instance fixed and rotating the second instance in 10 degree increments from 0 to 180 degrees. I counted matches manually using my human neural network as ground truth, and adjusted thresholding so that fewer matches were produced. Figure \ref{fig:rotbad} shows a histogram of succesful descriptor matches. The histogram shows that fewer correct matches are found as rotation is increased, so BRIEF is not rotation invariant.
+\newpage
+\subsection{Q2.5}
+So far, these BRIEF descriptors have been working well. But how do they operate under rotation? Let's find out! I took an image and tested matches against itself while holding the first instance fixed and rotating the second instance in 10 degree increments from 0 to 180 degrees. I counted matches manually using my human neural network as ground truth, and adjusted thresholding so that fewer matches were produced. Figure \ref{fig:rotbad} shows a histogram of succesful descriptor matches. The histogram shows that fewer correct matches are found as rotation is increased, so BRIEF is not rotation invariant. This makes sense , as the descriptor is evaluated assuming certain relationships between x and y positions in an image patch, and that information changes with rotation.
 
 \begin{figure}[H]
 \centering
-\includegraphics[page=1,width=0.75\textwidth]{q2_4}
-\caption{ Drop it down, flip it and reverse it }
-\label{fig:rotbad}
+\includegraphics[page=1,width=0.75\textwidth]{q2_5}
+\caption{ Correct point matches vs. image rotation } 
+\label{fig:imgrot}
 \end{figure}   
 
-
+\newpage
 \section { Q3 }
 Figure \ref{fig:lumos} shows the cover of a Harry Potter book mapped and overlayed onto a book on a desk.
 \begin{figure}[H]
 \centering
-\includegraphics[page=1,width=0.75\textwidth]{q2_4}
+\includegraphics[page=1,width=0.75\textwidth]{q3_4}
 \caption{ Harry Potter book cover mapped to CV book on desk }
 \label{fig:lumos}
 \end{figure}   
@@ -295,6 +296,8 @@ H =
 \end {bmatrix} 
 $$
 
+
+\newpage
 \section { Q4 }
 \subsection { Q4.1 }
 Figure \ref{fig:q41} shows two images taken from a baseball stadium of a skyline merged together into a panorama.
@@ -315,6 +318,8 @@ $$
 \label{fig:q41}
 \end{figure}   
 
+
+\newpage
 \subsection { Q4.2 }
 Figure \ref{fig:q42} shows the same two images used in Q4.1 stitched together, with the addition of a feature to automatically control the output shape of the image such that the output image contains the entirety of both images.
 
@@ -325,6 +330,8 @@ Figure \ref{fig:q42} shows the same two images used in Q4.1 stitched together, w
 \label{fig:q42}
 \end{figure}   
 
+
+\newpage
 \subsection { Q4.3 }
 The function created for the previous section was wrapped in a high level function that extracts correspondences, computes homographies, and stitches images. Images incline\_L and incline\_R were stitched together, shown in figure \ref{fig:q4_3}.
 T
@@ -342,7 +349,7 @@ $$
 \centering
 \includegraphics[page=1,width=0.75\textwidth]{q4_3}
 \caption{ Automagic panorama of skyline}
-\label{fig:q42}
+\label{fig:q4_3}
 \end{figure}   
 
 
