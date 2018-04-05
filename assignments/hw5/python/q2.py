@@ -63,8 +63,12 @@ def eightpoint(pts1_in, pts2_in, M=1):
   ## Normalize points ##########################################################
   ##############################################################################
   Tf  = getNorm ( np.vstack ( ( pts1 , pts2 ) ) )
+  #Tf  = np.eye ( 3 )
+  #Tf [ 0  , 0 ] = 1 / float ( M )
+  #Tf [ 1  , 1 ] = 1 / float ( M )
   pts1 = np.dot ( Tf , to_homogeneous ( pts1 ).T ).T
   pts2 = np.dot ( Tf , to_homogeneous ( pts2 ).T ).T
+  #import pdb; pdb.set_trace()
 
 
   ##############################################################################
@@ -77,11 +81,12 @@ def eightpoint(pts1_in, pts2_in, M=1):
     yp = pts1 [ i , 1 ]
     x  = pts2 [ i , 0 ]
     y  = pts2 [ i , 1 ]
+
     entry = np.array ( [ x*xp , x*yp , x ,  y*xp , y*yp , y , xp , yp , 1 ] )
     A = np.vstack ( [ A , entry ] )
 
-  U , S , V =  np.linalg.svd ( A )
-  F_full_rank = V [ -1 ].reshape ( ( 3 , 3 ) )
+  U , S , Vt =  np.linalg.svd ( A )
+  F_full_rank = Vt [ -1 , : ].reshape ( ( 3 , 3 ) )
   
   ##############################################################################
   ## Validation: all x' F x close to zero fall points ##########################
@@ -91,17 +96,18 @@ def eightpoint(pts1_in, pts2_in, M=1):
     x1p = pts1 [ i ]
     x1  = pts2 [ i ]
     print np.dot ( x1p , np.dot ( F_full_rank , x1 ) )
+  import pdb;pdb.set_trace ()
   """
 
   ##############################################################################
   ## Reduce rank by zero-ing minimum singular value ############################
   ##############################################################################
-  U , S , V = np.linalg.svd ( F_full_rank )
+  U , S , Vt = np.linalg.svd ( F_full_rank )
   assert len ( S ) == 3 , 'expected Singular value vector to be length three'
   S [ 2     ] = 0
   S [ 0 : 2 ] = np.sum  ( S ) / float ( 2 )
   S =           np.diag ( S )
-  F = np.dot ( U , np.dot ( S , V.T ) )
+  F = np.dot ( U , np.dot ( S , Vt ) )
   F = F.reshape ( ( 3 , 3 ) )
 
   ##############################################################################
@@ -140,27 +146,28 @@ def eightpoint(pts1_in, pts2_in, M=1):
 
 # Q 2.2
 # you'll probably want fsolve
-def sevenpoint(pts1, pts2, M=1):
-  assert(pts1.shape[0] == 7)
-  assert(pts2.shape[0] == 7)
+def sevenpoint( pts1_in , pts2_in , M=1):
+  assert(pts1_in.shape[0] == 7)
+  assert(pts2_in.shape[0] == 7)
   N = 7
   pts1 = np.copy ( pts1_in )
   pts2 = np.copy ( pts2_in )
-  #r , c = pts1_in.shape 
   NF = 9
 
-  alpha = sympy.Symbol ( 'alpha')
-  #SVD
   ##############################################################################
   ## Normalize points ##########################################################
   ##############################################################################
   Tf  = getNorm ( np.vstack ( ( pts1 , pts2 ) ) )
+  Tf  = np.eye ( 3 )
+  Tf [ 0  , 0 ] = 1 / float ( M )
+  Tf [ 1  , 1 ] = 1 / float ( M )
+
   pts1 = np.dot ( Tf , to_homogeneous ( pts1 ).T ).T
   pts2 = np.dot ( Tf , to_homogeneous ( pts2 ).T ).T
 
 
   ##############################################################################
-  ## Solve for optimal F #######################################################
+  ## Apply SVD and extract right null space vectorz, then reshape ##############
   ##############################################################################
 
   A = np.empty ( [ 0 , NF ] )
@@ -172,18 +179,35 @@ def sevenpoint(pts1, pts2, M=1):
     entry = np.array ( [ x*xp , x*yp , x ,  y*xp , y*yp , y , xp , yp , 1 ] )
     A = np.vstack ( [ A , entry ] )
 
-  U , S , V =  np.linalg.svd ( A )
-  F_full_rank = V [ -1 ].reshape ( ( 3 , 3 ) )
- 
+  U , S , Vt =  np.linalg.svd ( A )
+  F1 = Vt [ -2 ].reshape ( ( 3 , 3 ) )
+  F2 = Vt [ -1 ].reshape ( ( 3 , 3 ) )
 
+  ##############################################################################
+  ## Find the one true F. Or three true Fs as the case may be. #################
+  ##############################################################################
+  f = lambda alpha : np.linalg.det ( alpha * F1 + ( 1 - alpha ) * F2 )
+  root = fsolve ( f ,  1 )
+  ###can this return a bunch of numbers? meh
 
-  F1 = sympy.Matrix ( F1 )
-  F2 = sympy.Matrix ( F2 )
-  F = alpha * F1 + ( 1 - alpha ) * F2
-  roots = sympy.solve( F.det() , alpha )
-  #sympy.simplify ( sympy.expand ( X.det()  ) )
- 
+  pts1 = np.copy ( pts1_in )
+  pts2 = np.copy ( pts2_in )
+  pts1 = np.dot ( Tf , to_homogeneous ( pts1_in ).T ).T
+  pts2 = np.dot ( Tf , to_homogeneous ( pts2_in ).T ).T
 
+  F = root * F1 + ( 1 - root ) * F2
+  F = np.dot ( F    , Tf )
+  F = np.dot ( Tf.T , F  )
   return F
 
-
+  ##############################################################################
+  ## Validation:  F still works in non-normalized space ########################
+  ##############################################################################
+  """
+  print F
+  for i in range ( N ):
+    x1p = pts1 [ i ]
+    x1  = pts2 [ i ]
+    print np.dot ( x1p, np.dot ( F , x1 ) )
+  import pdb;pdb.set_trace()
+  """
