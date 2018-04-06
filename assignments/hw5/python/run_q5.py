@@ -7,10 +7,12 @@ import matplotlib.pyplot as plt
 from util import camera2
 
 from q3 import essentialMatrix,triangulate
-from q5 import ransacF, rodrigues, invRodrigues, rodriguesResidual, bundleAdjustment
+from q5 import ransacF, rodrigues, invRodrigues, rodriguesResidual, \
+               bundleAdjustment , flatten_to_x , unflatten_from_x 
 
 # Setup
 # can take homework_dir as first argument
+DEBUG = False
 HOMEWORK_DIR = ".." if len(sys.argv) < 2 else sys.argv[1]
 PARTS_RUN = 15 if len(sys.argv) < 3 else int(sys.argv[2])
 SOME_CORRS = os.path.join(HOMEWORK_DIR,'data','some_corresp_noisy.mat')
@@ -37,16 +39,17 @@ F = F/F[2,2]
 print(F)
 
 # Q5.2
-r = np.array([0,2,0])
-R = rodrigues(r)
-print('both the below should be identity')
-print(R.T.dot(R))
-print(R.dot(R.T))
+if DEBUG:
+  r = np.array([0,2,0])
+  R = rodrigues(r)
+  print('both the below should be identity')
+  print(R.T.dot(R))
+  print(R.dot(R.T))
 
-# Q5.2
-r = invRodrigues(R)
-print('should be r')
-print(r)
+  # Q5.2
+  r = invRodrigues(R)
+  print('should be r')
+  print(r)
 
 # Q5.3
 E = essentialMatrix(F,K1,K2)
@@ -56,22 +59,24 @@ M2s = camera2(E)
 goodP1 = pts1[inliers]
 goodP2 = pts2[inliers]
 
-C1 = np.hstack([np.eye(3),np.zeros((3,1))])
-for C2 in M2s:
-    P, err = triangulate(K1.dot(C1),goodP1,K2.dot(C2),goodP2)
+M1 = np.hstack([np.eye(3),np.zeros((3,1))])
+for M2 in M2s:
+    P, err = triangulate(K1.dot(M1),goodP1,K2.dot(M2),goodP2)
     if(P.min(0)[2] > 0):
         # we're the right one!
         break
 print('original error is ',err)
 
 # you should create this from the above (using P,C2)
-initialx =  None
-err = rodriguesResidual(K1,C1,goodP1,K2,goodP2,initialx)
+initialx = flatten_to_x ( P , M2 )
+#Pnew , Mnew = unflatten_from_x ( initialx2 ) #check against P,M2
+err = rodriguesResidual(K1,M1,goodP1,K2,goodP2,initialx)
 print('initial error is ',err)
-C2n,Pn = bundleAdjustment(K1,C1,goodP1,K2,C2,goodP2,P)
+M2n,Pn = bundleAdjustment(K1,M1,goodP1,K2,M2,goodP2,P)
 # you should create this from the above (using P,C2)
-finalx =  None
-err = rodriguesResidual(K1,C1,goodP1,K2,goodP2,finalx)
+finalx =  flatten_to_x ( Pn , M2n )
+err = rodriguesResidual(K1,M1,goodP1,K2,goodP2,finalx)
 print('final error is ',err)
+
 
 

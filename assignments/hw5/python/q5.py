@@ -1,6 +1,9 @@
 import numpy as np
 from q2 import eightpoint, sevenpoint
 from q3 import triangulate
+from scipy.optimize import minimize
+
+
 
 def to_homogeneous ( points_in ):
   points = np.copy ( points_in )
@@ -96,45 +99,122 @@ def rodrigues(r):
 # 3x3 rotatation matrix is R
 # https://en.wikipedia.org/wiki/Rodrigues%27_rotation_formula
 # https://en.wikipedia.org/wiki/Axis%E2%80%93angle_representation
-def invRodrigues(R):
-    #r = None
-    """
-    A = ( R - R.T ) / float ( 2 )
-    rho = np.array ( [ A [ 2 , 1 ] , A [ 0 , 2 ] , A [ 1 ,  0 ] ] )
-    s = np.linalg.norm ( rho )
-    c = np.array ( R [ 0 , 0 ] + R [ 1 , 1 ] + R [ 2 , 2 ] -1 ) / float ( 2 )
-    if s == 0 and c == 1:
-      r = np.array ( [ 0 , 0 , 0 ] ).T
-    elif s == 0 and c == -1:
-      r = 0
-    
-    return r
-    """
-    theta = np.arccos ( ( np.trace ( R ) - 1 ) / float ( 2 ) )
-    u =  R [ [ 2 , 0 , 1 ] , [ 1 , 2 , 0 ] ] - \
-         R [ [ 1 , 2 , 0 ] , [ 2 , 0 , 1 ] ]
-    u = u / float ( 2 * np.sin ( theta ) )  # unit axis vector
-    r = u * theta
-    return r 
+def S12 ( r ):
+  
+  if np.linalg.norm ( r ) == np.pi and \
+    ( 
+      ( r [ 0 ] == 0 and r [ 1 ] == 0  and r [ 2 ] < 0 ) or \
+      ( r [ 0 ] == 0 and r [ 1 ]  < 0                  ) or \
+      ( r [ 0 ]  < 0                                   )
+    ):
+    r = -r
+  else:
+    r = r
+  return r
 
+def invRodrigues(R):
+  A = ( R - R.T ) / float ( 2 )
+  rho = np.array ( [ A [ 2 , 1 ] , A [ 0 , 2 ] , A [ 1 ,  0 ] ] )
+  s = np.linalg.norm ( rho )
+  c = np.array ( R [ 0 , 0 ] + R [ 1 , 1 ] + R [ 2 , 2 ] -1 ) / float ( 2 )
+  if s == 0 and c == 1:    # " sin theta = 0 " , weird condition
+    r = np.array ( [ 0 , 0 , 0 ] ).T
+  elif s == 0 and c == -1: # " sin theta = pi " , also weird condition
+    RpI = R + np.eye ( 3 )
+    for i in range (3 ):
+      if np.all ( RpI [ : , i ] == 0 ):
+        continue
+      else:
+        v = RpI [ : , i ]
+        break
+    r = S12 ( u * np.pi )
+  else:
+    theta = np.arctan2 ( s , c )
+    u = rho / s
+    r = u * theta
+  return r
+  """
+  theta = np.arccos ( ( np.trace ( R ) - 1 ) / float ( 2 ) )
+  u =  R [ [ 2 , 0 , 1 ] , [ 1 , 2 , 0 ] ] - \
+       R [ [ 1 , 2 , 0 ] , [ 2 , 0 , 1 ] ]
+  u = u / float ( 2 * np.sin ( theta ) )  # unit axis vector
+  r = u * theta
+  """
+  return r 
+
+def flatten_to_x ( P , M ):
+  # flatten P. extract rotation and translation from M ,rodriguesify,
+  # and flatten
+  P_flat = P.ravel() # O sharp?
+  R = M [ : , range ( 3 ) ]#.ravel()
+  r = invRodrigues ( R )
+  t = M [ : , 3 ] 
+  return np.hstack ( ( P_flat , r , t ) ).reshape ( ( -1 , 1 ) )
+
+def unflatten_from_x ( x ):
+  # flatten P. extract rotation and translation from M ,rodriguesify,
+  # and flatten
+  P_flat = x [ 0 : -6 ]
+  r      = x [ -6 : -3 ]
+  t      = x [ -3 : ].reshape ( 3 , 1 )
+  R = rodrigues ( r )
+  M = np.hstack ( ( R , t ) )
+  P = P_flat.reshape ( -1 , 3 )
+  return  P , M 
+
+################################################################################
+################################################################################
+################################################################################
 # Q5.3
 # we're using numerical gradients here
 # but one of the great things about the above formulation
 # is it has a nice form of analytical gradient
+################################################################################
 def rodriguesResidual(K1, M1, p1, K2, p2, x):
-    residuals = None
-    
-    return residuals
+  ##############################################################################
+  ## Stack up our known points #################################################
+  ##############################################################################
+  #z    = np.hstack ( ( p1.ravel () , p2.ravel () ) )
+  z    = np.vstack ( ( p1 , p2 ) )
+  ##############################################################################
+  ## Project triangulated points back to image plane ###########################
+  ##############################################################################
+  P_est , M2_est = unflatten_from_x ( x )
+  C1 = K1.dot( M1     )
+  C2 = K2.dot( M2_est )
+  # k , P_est is row entries non homogeneous
+  # => homogeneous, transpose for transform,then transpose back
+  # to row entries , then remove homogeneous ones column
+  p1_est = np.dot ( C1 , to_homogeneous ( P_est ).T ).T
+  p2_est = np.dot ( C2 , to_homogeneous ( P_est ).T ).T
+  p1_est = p1_est / p1_est [ : , 2 ] [ : , None ]
+  p2_est = p2_est / p2_est [ : , 2 ] [ : , None ]
+  p1_est = p1_est [ : , 0:2 ] # remove ones column
+  p2_est = p2_est [ : , 0:2 ] # remove ones column
+
+  ##############################################################################
+  ## Stacks on stacks of point estimates #######################################
+  ##############################################################################
+  #z_hat  = np.hstack ( ( p1_est.ravel () , p2_est.ravel () ) )
+  z_hat  = np.vstack ( ( p1_est , p2_est ) )
+  errors = z - z_hat
+  residuals = np.sum ( np.square ( np.linalg.norm ( errors , axis = 1 ) ) )
+  residuals = residuals.reshape ( ( -1 , 1 ) ) #1d array so optimize isnt sad
+  return residuals
 
 # we should use scipy.optimize.minimize
 # L-BFGS-B is good, feel free to use others and report results
 # https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.minimize.html
-def bundleAdjustment(K1, M1, p1, K2, M2init, p2,Pinit):
-    M2, P = None, None
-    
-    return M2,P 
+def bundleAdjustment(K1, M1, p1, K2, M2init, p2, Pinit):
+  x0 = flatten_to_x ( Pinit , M2init )
+  f = lambda x : rodriguesResidual( K1 , M1, p1 , K2 , p2 , x )
+  minimizer = minimize ( f , x0 , method = 'L-BFGS-B' )
+  xawesome = minimizer.x
+  import pdb;pdb.set_trace()
+  P , M2 = unflatten_from_x ( xawesome )
+  return M2 , P 
 
-def test_rodriguez():
+def test_rodrigues():
   assert np.all ( rodrigues ( np.array ( [ 0 , 0 , 0 ] ) ) == np.eye ( 3 ) )
   r1 = np.array ( [ 0 , 0 , np.pi / float ( 3 ) ] )  # should look like rotation around z
   R1 = rodrigues ( r1 )
@@ -146,7 +226,6 @@ def test_rodriguez():
   r1x = invRodrigues ( R1 )
   r2x = invRodrigues ( R2 )
   r3x = invRodrigues ( R3 )
-
 
   print 'r1 : {}'.format ( r1 )
   print 'r2 : {}'.format ( r2 )
@@ -161,5 +240,13 @@ def test_rodriguez():
   #kewl
 
 if __name__ == "__main__":
-  test_rodriguez()
+  test_rodrigues()
 
+"""
+grad[k] = (f(*((xk + d,) + args)) - f0) / d[k]
+(Pdb) n
+ValueError: 'setting an array element with a sequence.'
+> /home/joe/anaconda2/lib/python2.7/site-packages/scipy/optimize/lbfgsb.py(274)func_and_grad()
+-> g = _approx_fprime_helper(x, fun, epsilon, args=args, f0=f)
+
+"""
