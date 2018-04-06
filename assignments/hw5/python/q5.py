@@ -1,5 +1,5 @@
 import numpy as np
-from q2 import eightpoint, sevenpoint
+from q2 import eightpoint, sevenpoint , getNorm
 from q3 import triangulate
 from scipy.optimize import minimize
 
@@ -24,14 +24,14 @@ def from_homogeneous ( points_in ):
 # we're going to also return inliers
 
 def ransacF(pts1, pts2, M):
-  NSP       = 8    #number of points to sample
+  NSP       = 30    #number of points to sample
   NI        = 3000 # n iterations
   THRESHOLD = 0.01  #threshold , pixels?
   assert pts1.shape == pts2.shape , "point input sizes differ dummy"
   ND = pts1.shape [ 0 ]
-  pts1_h = to_homogeneous ( pts1 )
-  pts2_h = to_homogeneous ( pts2 )
-
+  Tf  = getNorm ( np.vstack ( ( pts1 , pts2 ) ) )
+  pts1_h = np.dot ( Tf , to_homogeneous ( pts1 ).T ).T
+  pts2_h = np.dot ( Tf , to_homogeneous ( pts2 ).T ).T
   F = None
 
   inliers   = 0 
@@ -39,9 +39,9 @@ def ransacF(pts1, pts2, M):
   for i in range ( NI ):
     inliers_temp = []
     pinds = np.random.choice ( range ( ND ) , NSP , replace = False )
-    pts1_sample = pts1 [ pinds , : ]
-    pts2_sample = pts2 [ pinds , : ]
-    F_est = eightpoint ( pts1_sample , pts2_sample , M )
+    pts1_sample = pts1_h [ pinds , : ]
+    pts2_sample = pts2_h [ pinds , : ]
+    F_est = eightpoint ( pts1_sample [ : , 0:2 ] , pts2_sample [ : , 0:2 ] , M )
 
     n_inliers_temp = 0
     for pi in range ( ND ):
@@ -58,7 +58,10 @@ def ransacF(pts1, pts2, M):
       n_inliers = n_inliers_temp
       inliers = inliers_temp
       F = F_est
-  
+
+  F = np.dot ( F    , Tf )
+  F = np.dot ( Tf.T , F  )
+
   return F, inliers
 
 # Q 5.2
