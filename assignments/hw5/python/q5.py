@@ -210,7 +210,6 @@ def bundleAdjustment(K1, M1, p1, K2, M2init, p2, Pinit):
   f = lambda x : rodriguesResidual( K1 , M1, p1 , K2 , p2 , x )
   minimizer = minimize ( f , x0 , method = 'L-BFGS-B' )
   xawesome = minimizer.x
-  import pdb;pdb.set_trace()
   P , M2 = unflatten_from_x ( xawesome )
   return M2 , P 
 
