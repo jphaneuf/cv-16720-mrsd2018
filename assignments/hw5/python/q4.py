@@ -4,85 +4,103 @@ from mpl_toolkits.mplot3d import axes3d, Axes3D
 
 from q2 import eightpoint
 from q3 import essentialMatrix, triangulate
-from util import camera2
+from util import camera2 , plot_matched_points2
+import skimage
+from skimage.feature import ORB , BRIEF
+from skimage.color import rgb2gray
+from scipy.spatial.distance import hamming
+import scipy
+import scipy.ndimage.filters as fi
 # Q 4.1
 # np.pad may be helpful
 ################################################################################
 def epipolarCorrespondence(im1, im2, F, x1, y1):
+    DEBUG = False
+    PS = 45
+    DS = 256
+    MODE = 'normal'
+    SIG = 2
+    ## Construct epipolarbear line #############################################
+    ############################################################################
     lp = np.dot ( F , np.array ( [ x1 , y1 , 1 ] ) )
     lp = lp / lp [ 2 ]
-    yp   = lambda x: - ( lp [ 0 ] * x + lp [ 2 ] ) / lp [ 1 ]
+    ############################################################################
+    ## Find x intercept , and y ( x ), and find unit vector along epipolar line#
+    ############################################################################
+    x0 = - 1 / float ( lp [ 0 ] )
     xind = np.arange ( 0 , im2.shape [ 1 ] ) [ : , None ]
+    yp = lambda x: - ( lp [ 0 ] * x + lp [ 2 ] ) / lp [ 1 ]
 
-    window_centers = np.round ( np.hstack ( ( xind , yp ( xind ) ) ) )
-    ylim_ok = np.logical_and ( window_centers [ : , 1 ] > 0 , 
-                               window_centers [ : , 1 ] < im2.shape [ 0 ] )
-    window_centers = window_centers [ ylim_ok ]
-       
+    uv = np.array ( ( 1 , - lp [ 0 ] / lp [ 1 ] ) )
+    uv = np.sign ( uv [ 1 ] / uv [ 0 ] ) * uv
+    uv = uv / np.linalg.norm ( uv )
+      
     
     ############################################################################
     ## Plotting for debugging###################################################
     ############################################################################
-    #plt.subplot ( 2 , 1 , 1 )
-    #plt.imshow ( im1 )
-    #plt.plot ( x1 , y1 , 'r+' )
-    #plt.subplot ( 2 , 1 , 2 )
-    #plt.imshow ( im2 )
+    if DEBUG == True:
+      plt.subplot ( 2 , 1 , 1 )
+      plt.imshow ( im1 )
+      plt.plot ( x1 , y1 , 'r+' )
 
-    #plt.xlim ( [ 0 , im2.shape [ 1 ] ] )
-    #plt.ylim ( [ 0 , im2.shape [ 0 ] ] )
-    #plt.plot ( xind , yp ( xind ) )
-    ##############################################################################
+      plt.subplot ( 2 , 1 , 2 )
+      plt.imshow ( im2 )
+      plt.xlim ( [ 0 , im2.shape [ 1 ] ] )
+      plt.ylim ( [ 0 , im2.shape [ 0 ] ] )
+      plt.plot ( xind , yp ( xind ) )
+    ###############################################################################
 
     #############################################################################
     ## Initialized best distance metric and located point p2 ####################
     #############################################################################
     min_distance = 1e8
+    #p2 = np.zeros (  2 )
     p2 = None
 
     #############################################################################
-    ## Set up window offsets , compute euclidean descriptor for point on im1 ####
+    ## Init brief descriptor for point in image 1 ###############################
     #############################################################################
-    W = 7 #block size
-    offsets = np.unravel_index ( range ( W**2 ) , ( W, W ) )
-    offsets = np.array ( offsets ).T
-    offsets = offsets - np.floor ( W / 2)
+    brief = BRIEF ( patch_size =  PS , descriptor_size = DS , mode = MODE , sigma = SIG)
+    brief.extract ( rgb2gray ( im1 ) , np.array ( [  [ y1 , x1 ] ] ) )
+    desc1 = brief.descriptors [ 0 ]
 
-    im1xi = (x1 + offsets).astype('int')
-    im1yi = (y1 + offsets).astype('int')
-    im1i = ( np.array ( [ x1 , y1 ] ) + offsets ).astype('int')
-    im1_window = im1 [ im1i [ : , 1 ] , im1i [ : , 0 ] , : ]
-    im1_features = np.ravel ( im1_window )
-
-
+    ##############################################################################
+    ## Sweep along epipolar and check for matches until out of range ############
     #############################################################################
-    ## Sweep over line described by E x1 , check for best match #################
-    #############################################################################
-    for wc in window_centers:
+    wc = np.array ( ( x0 , yp ( x0 ) ) )  #window center
+    wc = wc + 100 * uv # initial offset so patch size clears
+    while 1:
+      wc = wc + 100*uv
+      wcr =  wc.astype(int)
       try:
-        wi = wc + offsets
-        wi = wi.astype ( 'int' )
-        window = im2 [ wi[ : , 1 ] , wi [ : , 0 ] , : ]
-        window = np.ravel ( window )
-        distance = np.linalg.norm ( window - im1_features )
+        brief = BRIEF ( patch_size =  PS , descriptor_size = DS , 
+                        mode = MODE , sigma = SIG)
+        xcr = wcr [ 0 ]
+        ycr = wcr [ 1 ]
+        brief.extract ( rgb2gray ( im2 ) , np.array ( [ [ ycr , xcr ] ] )  ) 
+        desc2 = brief.descriptors [ 0 ]
+        distance = hamming ( desc1 , desc2 )
+
         if distance < min_distance:
+          print distance
           min_distance = distance
           p2 = np.array ( [ wc [ 0 ] , wc [ 1 ] ] )
-          
-      except IndexError:
-        pass #out of bounds
+          #plt.plot ( p2 [ 0 ] , p2 [ 1 ] , 'r+' )
 
-    ## More debug###############################################################
-    #plt.plot ( p2 [ 0 ] , p2 [ 1 ] , 'r+' )
-    #plt.show()
-    ############################################################################
-    
+      except IndexError:
+        print 'index out of range'
+        break
+    if DEBUG == True:
+      plt.plot ( p2 [ 0 ] , p2 [ 1 ] , 'r+' )
+      plt.show()
     return p2 [ 0 ] , p2 [ 1 ] 
     #return x2, y2
 
 # Q 4.2
 # this is the "all in one" function that combines everything
 def visualize(IM1_PATH,IM2_PATH,TEMPLE_CORRS,F,K1,K2):
+    ############################################################################
     fig = plt.figure()
     ax = Axes3D(fig)
     # ax.set_xlim/set_ylim/set_zlim/
@@ -90,8 +108,60 @@ def visualize(IM1_PATH,IM2_PATH,TEMPLE_CORRS,F,K1,K2):
     # may be useful
     # you'll want a roughly cubic meter
     # around the center of mass
-    
+    camera_data = scipy.io.loadmat ( 'q3_3.mat' )
+    C2 = camera_data [ 'C2' ]
+    C1 = np.hstack([np.eye(3),np.zeros((3,1))])
+
+    im1 = skimage.io.imread(IM1_PATH)
+    im2 = skimage.io.imread(IM2_PATH)
+    pts_dict = scipy.io.loadmat(TEMPLE_CORRS)
+    pts1  = np.hstack ( ( pts_dict [ 'x1' ] , pts_dict [ 'y1' ] ) )
+    pts2  = np.zeros ( pts1.shape )
+    for i in range ( len ( pts1 ) ):
+      x1 = pts1 [ i , 0 ]
+      y1 = pts1 [ i , 1 ]
+      x2 , y2 = epipolarCorrespondence ( im1 , im2 , F , x1 , y1 )
+      pts2 [ i , 0 ] = x2
+      pts2 [ i , 1 ] = y2
+
+    """
+    for i in range ( len ( pts1 ) - 5 ):
+      plot_matched_points2(im1,im2,F,
+                         pts1[ i:i+5 ,:], 
+                          np.zeros ( ( 5  , 2 ) ) , 
+                        pts2 [ i:i+5 , : ] )
+    """
+
+    P , err = triangulate( K1.dot(C1) , pts1 , K2.dot(C2) , pts2 )
+    scipy.io.savemat ( 'temple3d.mat', { 'P':P}  )
+    ax.scatter ( P [ : , 0 ] , P [ : , 1 ] , P [ : , 2 ] )      
+    lim = np.max ( np.abs ( P ) )
+    ax.set_xlim ( ( - 1 , 1 ) )
+    ax.set_ylim ( ( - 1 , 1 ) )
+    ax.set_zlim ( ( - 1 , 2 ) )
+    ax.set_aspect ( 'equal' )
+    plt.show ( )
+
 
 # Extra credit
 def visualizeDense(IM1_PATH,IM2_PATH,TEMPLE_CORRS,F,K1,K2):
     return
+if __name__ == "__main__":
+  data = scipy.io.loadmat ( 'temple3d.mat' )
+  P = data [ 'P' ]
+  fig = plt.figure()
+  ax = Axes3D(fig)
+  ax.scatter ( P [ : , 0 ] , P [ : , 1 ] , P [ : , 2 ] , s = 1 )      
+  #lim = np.max ( np.abs ( P ( ) )
+  ax.set_xlim ( ( - 1 , 1 ) )
+  ax.set_ylim ( ( - 1 , 1 ) )
+  ax.set_zlim ( (  0 , 6 ) )
+  ax.set_aspect ( 'equal' )
+  plt.show ( )
+  
+  fig = plt.figure()
+  ax.scatter ( P [ : , 0 ] , P [ : , 1 ] , s = 1 )      
+  ax.set_xlim ( ( - 1 , 1 ) )
+  ax.set_ylim ( ( - 1 , 1 ) )
+  plt.show ()
+
