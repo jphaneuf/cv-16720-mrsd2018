@@ -37,7 +37,7 @@ def plot_epipolar_line(im,F,pt):
     # take only line points inside the image
     #ndx = (lt>=0) & (lt<m) 
     # we'll use the whole line
-    plt.plot(t,lt,linewidth=2)
+    plt.plot(t,lt,linewidth=1)
     
     # don't need this!
     #U,S,V = linalg.svd(F)
@@ -56,7 +56,34 @@ def plot_epipolar_lines(im1,im2,F,pts1,idxs_to_plot=[1,5,9]):
     plt.imshow(im2)
     plt.show()
 
-    
+def plot_matched_points2(im1,im2,F,pts1,pts2,pts2e):
+    ax1 = plt.subplot(121)
+    ax1.imshow(im1)
+    ax1.set_title ('Source image')
+    #ax1.title('source')
+    for pt in pts1:
+        ax1.plot(pt[0],pt[1],ms=5,marker='o')
+
+    ax2 = plt.subplot(122)
+    ax2.imshow(im2)
+    ax2.set_title('Target image')
+
+    # lines
+    for pt in pts1:
+        plot_epipolar_line(im2,F,pt)
+
+    #match estimates
+    for pt in pts2e:
+        ax2.plot(pt[0],pt[1],ms=5,marker='o')
+    ax2.set_xlim( ( 0 , im2.shape [ 1 ] ) )
+    ax2.set_ylim( ( 0 , im2.shape [ 0 ] ) )
+
+    #ground truth
+    for pt in pts2:
+        ax2.plot(pt[0],pt[1],ms=10,marker='+',c='w')
+ 
+    plt.show()   
+
 def plot_matched_points(im1,im2,F,pts1,pts2,pts2e):
     plt.subplot(221)
     plt.imshow(im1)
