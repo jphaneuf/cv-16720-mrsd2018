@@ -109,8 +109,8 @@ def visualize(IM1_PATH,IM2_PATH,TEMPLE_CORRS,F,K1,K2):
     # you'll want a roughly cubic meter
     # around the center of mass
     camera_data = scipy.io.loadmat ( 'q3_3.mat' )
-    C2 = camera_data [ 'C2' ]
-    C1 = np.hstack([np.eye(3),np.zeros((3,1))])
+    M2 = camera_data [ 'M2' ]
+    M1 = np.hstack([np.eye(3),np.zeros((3,1))])
 
     im1 = skimage.io.imread(IM1_PATH)
     im2 = skimage.io.imread(IM2_PATH)
@@ -132,7 +132,7 @@ def visualize(IM1_PATH,IM2_PATH,TEMPLE_CORRS,F,K1,K2):
                         pts2 [ i:i+5 , : ] )
     """
 
-    P , err = triangulate( K1.dot(C1) , pts1 , K2.dot(C2) , pts2 )
+    P , err = triangulate( K1.dot(M1) , pts1 , K2.dot(M2) , pts2 )
     scipy.io.savemat ( 'temple3d.mat', { 'P':P}  )
     ax.scatter ( P [ : , 0 ] , P [ : , 1 ] , P [ : , 2 ] )      
     lim = np.max ( np.abs ( P ) )
