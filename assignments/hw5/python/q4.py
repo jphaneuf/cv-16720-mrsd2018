@@ -94,8 +94,7 @@ def epipolarCorrespondence(im1, im2, F, x1, y1):
     if DEBUG == True:
       plt.plot ( p2 [ 0 ] , p2 [ 1 ] , 'r+' )
       plt.show()
-    return p2 [ 0 ] , p2 [ 1 ] 
-    #return x2, y2
+    return p2 
 
 # Q 4.2
 # this is the "all in one" function that combines everything
@@ -120,9 +119,10 @@ def visualize(IM1_PATH,IM2_PATH,TEMPLE_CORRS,F,K1,K2):
     for i in range ( len ( pts1 ) ):
       x1 = pts1 [ i , 0 ]
       y1 = pts1 [ i , 1 ]
-      x2 , y2 = epipolarCorrespondence ( im1 , im2 , F , x1 , y1 )
-      pts2 [ i , 0 ] = x2
-      pts2 [ i , 1 ] = y2
+      p2e = epipolarCorrespondence ( im1 , im2 , F , x1 , y1 )
+      if p2e is not None:
+        pts2 [ i , 0 ] = p2e [ 0 ]
+        pts2 [ i , 1 ] = p2e [ 1 ]
 
     """
     for i in range ( len ( pts1 ) - 5 ):
