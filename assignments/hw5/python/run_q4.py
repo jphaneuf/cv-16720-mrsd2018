@@ -1,6 +1,6 @@
 from q2 import eightpoint
 from q4 import epipolarCorrespondence, visualize, visualizeDense
-from util import plot_matched_points
+from util import plot_matched_points , plot_matched_points2
 
 import sys
 import os
@@ -29,21 +29,27 @@ corr = scipy.io.loadmat(SOME_CORRS)
 pts1 = corr['pts1']
 pts2 = corr['pts2']
 idxs = np.array([82,19,56,84,54,24,18,104])
+idxs = np.arange(pts1.shape[0])
+idxs = np.random.choice(idxs,25,False)
+
 
 if PARTS_RUN&1 > 0:
+    print 'running part 1'
     F = eightpoint(pts1[idxs,:],pts2[idxs,:],max(im1.shape))
     F = F/F[2,2]
     pts2e = []
     for idx in idxs:
         p2e = epipolarCorrespondence(im1,im2,F,pts1[idx,0],pts1[idx,1])
-        pts2e.append(p2e)
+        if p2e is not None :
+          pts2e.append(p2e)
     pts2e = np.array(pts2e)
     print(pts2e-pts2[idxs,:])
     print('Matching error: {:.2f}'.format(np.linalg.norm(pts2e-pts2[idxs,:])))
-    plot_matched_points(im1,im2,F,pts1[idxs,:],pts2[idxs,:],pts2e)
+    plot_matched_points2(im1,im2,F,pts1[idxs,:],pts2[idxs,:],pts2e)
     
 # Q4.2
 if PARTS_RUN&2 > 0:
+    print 'running part 2'
     import h5py
     with h5py.File(INTRINS, 'r') as f:
         K1 = np.array(f['K1']).T
