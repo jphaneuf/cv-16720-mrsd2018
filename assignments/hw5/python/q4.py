@@ -71,7 +71,7 @@ def epipolarCorrespondence(im1, im2, F, x1, y1):
     wc = np.array ( ( x0 , yp ( x0 ) ) )  #window center
     wc = wc + 100 * uv # initial offset so patch size clears
     while 1:
-      wc = wc + 100*uv
+      wc = wc + 10*uv
       wcr =  wc.astype(int)
       try:
         brief = BRIEF ( patch_size =  PS , descriptor_size = DS , 
@@ -89,8 +89,8 @@ def epipolarCorrespondence(im1, im2, F, x1, y1):
           #plt.plot ( p2 [ 0 ] , p2 [ 1 ] , 'r+' )
 
       except IndexError:
-        print 'index out of range'
         break
+
     if DEBUG == True:
       plt.plot ( p2 [ 0 ] , p2 [ 1 ] , 'r+' )
       plt.show()
@@ -134,6 +134,10 @@ def visualize(IM1_PATH,IM2_PATH,TEMPLE_CORRS,F,K1,K2):
 
     P , err = triangulate( K1.dot(M1) , pts1 , K2.dot(M2) , pts2 )
     scipy.io.savemat ( 'temple3d.mat', { 'P':P}  )
+    scipy.io.savemat ( 'q4_debug.mat' , { 'C2' : K2.dot ( M2 ) , 'M2' : M2 ,
+                        'p1' : pts1 , 'p2' : pts2 , 'P' : P [ : , 0 :3 ] } )
+
+
     ax.scatter ( P [ : , 0 ] , P [ : , 1 ] , P [ : , 2 ] )      
     lim = np.max ( np.abs ( P ) )
     ax.set_xlim ( ( - 1 , 1 ) )
@@ -142,10 +146,10 @@ def visualize(IM1_PATH,IM2_PATH,TEMPLE_CORRS,F,K1,K2):
     ax.set_aspect ( 'equal' )
     plt.show ( )
 
-
 # Extra credit
 def visualizeDense(IM1_PATH,IM2_PATH,TEMPLE_CORRS,F,K1,K2):
     return
+
 if __name__ == "__main__":
   data = scipy.io.loadmat ( 'temple3d.mat' )
   P = data [ 'P' ]
@@ -153,15 +157,8 @@ if __name__ == "__main__":
   ax = Axes3D(fig)
   ax.scatter ( P [ : , 0 ] , P [ : , 1 ] , P [ : , 2 ] , s = 1 )      
   #lim = np.max ( np.abs ( P ( ) )
-  ax.set_xlim ( ( - 1 , 1 ) )
-  ax.set_ylim ( ( - 1 , 1 ) )
+  ax.set_xlim ( ( - 0.2 , 0.2 ) )
+  ax.set_ylim ( ( - 0.2 , 0.2 ) )
   ax.set_zlim ( (  0 , 6 ) )
   ax.set_aspect ( 'equal' )
   plt.show ( )
-  
-  fig = plt.figure()
-  ax.scatter ( P [ : , 0 ] , P [ : , 1 ] , s = 1 )      
-  ax.set_xlim ( ( - 1 , 1 ) )
-  ax.set_ylim ( ( - 1 , 1 ) )
-  plt.show ()
-
