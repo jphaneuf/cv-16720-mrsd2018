@@ -24,7 +24,7 @@ def from_homogeneous ( points_in ):
 # we're going to also return inliers
 
 def ransacF(pts1, pts2, M):
-  NSP       = 30    #number of points to sample
+  NSP       = 8    #number of points to sample
   NI        = 3000 # n iterations
   THRESHOLD = 0.01  #threshold , pixels?
   assert pts1.shape == pts2.shape , "point input sizes differ dummy"
