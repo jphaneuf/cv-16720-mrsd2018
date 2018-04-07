@@ -98,7 +98,7 @@ def epipolarCorrespondence(im1, im2, F, x1, y1):
 
 # Q 4.2
 # this is the "all in one" function that combines everything
-def visualize(IM1_PATH,IM2_PATH,TEMPLE_CORRS,F,K1,K2):
+def visualize(IM1_PATH,IM2_PATH,TEMPLE_CORRS,F,K1,K2,M1=None,M2=None):
     ############################################################################
     fig = plt.figure()
     ax = Axes3D(fig)
@@ -107,9 +107,11 @@ def visualize(IM1_PATH,IM2_PATH,TEMPLE_CORRS,F,K1,K2):
     # may be useful
     # you'll want a roughly cubic meter
     # around the center of mass
-    camera_data = scipy.io.loadmat ( 'q3_3.mat' )
-    M2 = camera_data [ 'M2' ]
-    M1 = np.hstack([np.eye(3),np.zeros((3,1))])
+    if M1 is None:
+      M1 = np.hstack([np.eye(3),np.zeros((3,1))])
+    if M2 is None:
+      camera_data = scipy.io.loadmat ( 'q3_3.mat' )
+      M2 = camera_data [ 'M2' ]
 
     im1 = skimage.io.imread(IM1_PATH)
     im2 = skimage.io.imread(IM2_PATH)
