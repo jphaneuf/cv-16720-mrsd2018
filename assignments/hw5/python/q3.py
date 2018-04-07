@@ -10,6 +10,9 @@ from   util import camera2
 def essentialMatrix(F,K1,K2):
     #Todo : are we 
     E = np.dot ( K1.T , np.dot ( F , K2 ) )
+    ###wtf, this is done in util...
+    ####pwnd
+    """
     U , S , Vt = np.linalg.svd ( E )
     assert len ( S ) == 3 , 'expected Singular value vector to be length three'
     S [ 2     ] = 0
@@ -17,6 +20,7 @@ def essentialMatrix(F,K1,K2):
     S =           np.diag ( S )
     E = np.dot ( U , np.dot ( S , Vt ) )
     E = E.reshape ( ( 3 , 3 ) )
+    """
     E = E / E [ 2 , 2 ]
     return E
 
