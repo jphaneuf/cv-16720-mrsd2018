@@ -33,7 +33,8 @@ def triangulate( P1, pts1_in , P2 , pts2_in ):
   r , c = pts1_in.shape 
 
   #P, err = None, None
-  sq_errors = [ ]
+  sq_errors1 = [ ]
+  sq_errors2 = [ ]
   P      = [ ] 
   for i in range ( r ):
     A = np.empty ( [ 0 , 4 ] )
@@ -60,9 +61,13 @@ def triangulate( P1, pts1_in , P2 , pts2_in ):
     p1hat = p1hat  / p1hat [ 2  ]
     p2hat = np.dot ( P2  , Pest ) 
     p2hat = p2hat  / p2hat [ 2  ]
-    sq_errors.append ( norm ( p1 - p1hat [ 0 : 2 ].T  ) ** 2 + 
-                       norm ( p2 - p2hat [ 0 : 2 ].T  ) ** 2 ) 
-  err = sum ( sq_errors ) 
+
+    sq_errors1.append ( norm ( p1 - p1hat [ 0 : 2 ].T  ) ** 2 ) 
+    sq_errors2.append ( norm ( p2 - p2hat [ 0 : 2 ].T  ) ** 2 ) 
+  print sum ( sq_errors1 )
+  print sum ( sq_errors2 )
+  err = sum ( sq_errors1 )  + sum ( sq_errors1 )
+  print err
   P = np.array   ( P )
   P = np.reshape ( P , ( P.shape [ 0 ] , P.shape [ 1 ] ) )
   P = P [ : , 0:3 ] #remove homogeneous 1
@@ -93,9 +98,15 @@ def findM2 ( ):
     P, err = triangulate(K1.dot(M1),pts1,K2.dot(M2),pts2)
     P = np.reshape ( P , ( P.shape [ 0 ] , P.shape [ 1 ] ) )
     P = np.hstack ( ( P , np.ones ((  P.shape [ 0 ] ,1  ) ) ) )
+    #print P
+    
     P_inC2 = np.dot ( M2 , P.T )
     if all ( P_inC2 [ 2 ] > 0 ):
       print 'Mine M2 is the one true M2'
+      print 'C2'
+      print K2.dot ( M2 )
+      print 'M2'
+      print M2
       scipy.io.savemat ( 'q3_3.mat' , { 'C2' : K2.dot ( M2 ) , 'M2' : M2 ,
                          'p1' : pts1 , 'p2' : pts2 , 'P' : P [ : , 0 :3 ] } )
     else:
