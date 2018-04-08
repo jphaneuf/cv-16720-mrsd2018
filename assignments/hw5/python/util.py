@@ -58,14 +58,17 @@ def plot_epipolar_lines(im1,im2,F,pts1,idxs_to_plot=[1,5,9]):
 
 def plot_matched_points2(im1,im2,F,pts1,pts2,pts2e):
     ax1 = plt.subplot(121)
-    ax1.imshow(im1)
+    ax1.imshow(im1,origin='upper')
     ax1.set_title ('Source image')
     #ax1.title('source')
     for pt in pts1:
         ax1.plot(pt[0],pt[1],ms=5,marker='o')
+    ax1.set_xlim( ( 0 , im2.shape [ 1 ] ) )
+    ax1.set_ylim( ( 0 , im2.shape [ 0 ] ) )
+
 
     ax2 = plt.subplot(122)
-    ax2.imshow(im2)
+    ax2.imshow(im2,origin='upper')
     ax2.set_title('Target image')
 
     # lines
