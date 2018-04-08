@@ -7,6 +7,7 @@ import matplotlib.pyplot as plt
 from util import camera2
 
 from q3 import essentialMatrix,triangulate
+from q4 import visualize
 from q5 import ransacF, rodrigues, invRodrigues, rodriguesResidual, \
                bundleAdjustment , flatten_to_x , unflatten_from_x 
 
@@ -16,6 +17,7 @@ DEBUG = False
 HOMEWORK_DIR = ".." if len(sys.argv) < 2 else sys.argv[1]
 PARTS_RUN = 15 if len(sys.argv) < 3 else int(sys.argv[2])
 SOME_CORRS = os.path.join(HOMEWORK_DIR,'data','some_corresp_noisy.mat')
+TEMPLE_CORRS = os.path.join(HOMEWORK_DIR,'data','templeCoords.mat')
 INTRINS = os.path.join(HOMEWORK_DIR,'data','intrinsics.mat')
 IM1_PATH = os.path.join(HOMEWORK_DIR,'data','im1.png')
 IM2_PATH = os.path.join(HOMEWORK_DIR,'data','im2.png')
@@ -67,6 +69,9 @@ for M2 in M2s:
         break
 print('original error is ',err)
 
+#visualize(IM1_PATH,IM2_PATH,TEMPLE_CORRS,F,K1,K2,M1,M2)
+#import pdb;pdb.set_trace()
+ 
 # you should create this from the above (using P,C2)
 initialx = flatten_to_x ( P , M2 )
 #Pnew , Mnew = unflatten_from_x ( initialx2 ) #check against P,M2
@@ -77,6 +82,4 @@ M2n,Pn = bundleAdjustment(K1,M1,goodP1,K2,M2,goodP2,P)
 finalx =  flatten_to_x ( Pn , M2n )
 err = rodriguesResidual(K1,M1,goodP1,K2,goodP2,finalx)
 print('final error is ',err)
-
-
-
+scipy.io.savemat('q5opt.mat', {'F':F,'K1':K1,'K2':K2,'M1':M1,'M2':M2,'P':P,'Pn':Pn,'M2n':M2n,'pts1':pts1,'pts2':pts2,'goodP1':goodP1,'goodP2':goodP2,'E':E})
