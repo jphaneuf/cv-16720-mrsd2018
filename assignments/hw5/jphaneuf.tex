@@ -229,4 +229,74 @@ Total triangulation error for points in image 2 is: 358.641029195
 Total eror is : 733.384151762  
   
 
+\newpage
+\section{Q4}
+\subsection{Q4.1}
+Figure \ref{fig:corr41} shows correspondences found in image 2 by scanning for matches on epipolar lines. White markers show ground truth, colored dots show detected mathes.
+\begin{figure}[H]
+\centering
+\includegraphics[page=1,width=1\textwidth]{q4_1}
+\caption{Correspondences found using epipolar lines } 
+\label{fig:corr41}
+\end{figure}   
+
+\newpage
+\subsection{Q4.2}
+Figures \ref{fig:3d1} and \ref{fig:3d2} show 3 dimensional point clouds recovered from the two images
+\begin{figure}[H]
+\centering
+\includegraphics[page=1,width=1\textwidth]{q4_2a}
+\caption{Temple point cloud 1 } 
+\label{fig:3d1}
+\end{figure}   
+
+\begin{figure}[H]
+\centering
+\includegraphics[page=1,width=1\textwidth]{q4_2b}
+\caption{Teple point cloud 2 } 
+\label{fig:3d2}
+\end{figure}   
+
+\newpage
+\section{Q5}
+\subsection{Q5.1}
+RANSAC eightpoint performs much better than stock eightpoint. For an error metric, I considered that F is defined such that $p_{2}^{T} F p_{1} = 0$ , so for any proposed correspondence of $p_{1}$ and $p_{2}$ in images 1 and 2, that product should be close to zero. I experimented with error thresholds to get optimal results. I also experimented with the number of points used to fit the eightpoint model within RANSAC, and found that using the minimum of 8 gave good results.
+
+
+\newpage
+\subsection{Q5.3}
+Noisy correspondences were fed into RANSAC eightpoint, and a camera 2 extrinsic matrix M2 as well as a 3d point cloud were calculated from that. M2 and the point cloud were then fed into an optimizer using reprojection error as an error function. The total squared reprojection error was 14141.8 prior to optimization, and 274.2 after optimization.  
+    
+Figures \ref{fig:unopt} and \ref{fig:unoptside} show the unoptimized point cloud ( red ) overlaid onto the point cloud from the previous section ( blue  ). The points provided were too sparse to be interpretable by humans, so the previous point cloud provides context.
+
+Figures \ref{fig:opt} and \ref{fig:optside} show the optimized point cloud ( green ) also overlaid onto the previous section's point cloud ( blue ). The results are not particularly compelling.
+
+\begin{figure}[H]
+\centering
+\includegraphics[page=1,width=1\textwidth]{q5_3a}
+\caption{Temple noisy correspondences unoptimized   } 
+\label{fig:unopt}
+\end{figure}   
+
+\begin{figure}[H]
+\centering
+\includegraphics[page=1,width=1\textwidth]{q5_3b}
+\caption{Temple noisy correspondences unoptimized side view } 
+\label{fig:unoptside}
+\end{figure}   
+
+\begin{figure}[H]
+\centering
+\includegraphics[page=1,width=1\textwidth]{q5_3c}
+\caption{Temple noisy correspondences optimized } 
+\label{fig:opt}
+\end{figure}   
+
+\begin{figure}[H]
+\centering
+\includegraphics[page=1,width=1\textwidth]{q5_3d}
+\caption{Temple noisy correspondences optimized side view} 
+\label{fig:optside}
+\end{figure}   
+
 \end{document}
