@@ -27,12 +27,14 @@ pts2 = corr['pts2']
 idxs = np.array([82,19,56,84,54,24,18])
 
 if PARTS_RUN&1 > 0:
-    F = eightpoint(pts1,pts2,max(im1.shape))
+    M = np.max( ( im1.shape , im2.shape ) )
+    F = eightpoint(pts1,pts2, M )
     F = F/F[2,2]
     # fundamental matrix must have rank 2!
     assert(np.linalg.matrix_rank(F) == 2)
     print(F)
     plot_epipolar_lines(im1,im2,F,pts1,idxs)
+    scipy.io.savemat('q2_1.mat', {'F':F , 'M':M , 'pts1':pts1 , 'pts2':pts2 } )
 
 # Q2.2
 if PARTS_RUN&2 > 0:
@@ -40,7 +42,9 @@ if PARTS_RUN&2 > 0:
     #idxs = np.arange(pts1.shape[0])
     #idxs = np.random.choice(idxs,7,False)
     #print(idxs)
-    F = sevenpoint(pts1[idxs,:],pts2[idxs,:],max(im1.shape))
+    M = np.max( ( im1.shape , im2.shape ) )
+    F = sevenpoint(pts1[idxs,:],pts2[idxs,:], M)
     F = F/F[2,2] 
     print(F)
     plot_epipolar_lines(im1,im2,F,pts1,idxs)
+    scipy.io.savemat('q2_2.mat', {'F':F , 'M':M , 'pts1':pts1 , 'pts2':pts2 } )
