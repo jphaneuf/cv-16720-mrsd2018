@@ -45,7 +45,15 @@ if PARTS_RUN&1 > 0:
     pts2e = np.array(pts2e)
     print(pts2e-pts2[idxs,:])
     print('Matching error: {:.2f}'.format(np.linalg.norm(pts2e-pts2[idxs,:])))
-    plot_matched_points2(im1,im2,F,pts1[idxs,:],pts2[idxs,:],pts2e)
+    #plot_matched_points2(im1,im2,F,pts1[idxs,:],pts2[idxs,:],pts2e)
+    pts1_plot = pts1 [ idxs , : ]
+    pts2_plot = pts2 [ idxs , : ]
+    idxs_plot = np.random.choice(range(25),10,False)
+    #plot_matched_points(im1,im2,F,pts1[idxs,:],pts2[idxs,:],pts2e)
+    plot_matched_points2(im1,im2,F,pts1_plot[idxs_plot,:],pts2_plot[idxs_plot,:],pts2e [idxs_plot,:])
+    scipy.io.savemat('q4_1.mat',{'F':F , 'pts1':pts1_plot[idxs_plot,:] ,
+                                          'pts2':pts2_plot[idxs_plot,:] ,
+                                          'pts2_estimated': pts2e [idxs_plot,:] } )
     
 # Q4.2
 if PARTS_RUN&2 > 0:
@@ -57,6 +65,7 @@ if PARTS_RUN&2 > 0:
     F = eightpoint(pts1,pts2,max(im1.shape))
     F = F/F[2,2]
     visualize(IM1_PATH,IM2_PATH,TEMPLE_CORRS,F,K1,K2)
+
 
 # Q4.3 (Extra Credit)
 if PARTS_RUN&4 > 0:
