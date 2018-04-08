@@ -138,6 +138,10 @@ def visualize(IM1_PATH,IM2_PATH,TEMPLE_CORRS,F,K1,K2,M1=None,M2=None):
     scipy.io.savemat ( 'temple3d.mat', { 'P':P}  )
     scipy.io.savemat ( 'q4_debug.mat' , { 'C2' : K2.dot ( M2 ) , 'M2' : M2 ,
                         'p1' : pts1 , 'p2' : pts2 , 'P' : P [ : , 0 :3 ] } )
+    scipy.io.savemat ( 'q4_2.mat' , { 'C2' : K2.dot ( M2 ) , 'M2' : M2 ,
+                                      'C1' : K1.dot ( M1 ) , 'M1' : M1 ,
+                                       'F':F} )
+
 
 
     ax.scatter ( P [ : , 0 ] , P [ : , 1 ] , P [ : , 2 ] )      
