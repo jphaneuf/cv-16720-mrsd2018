@@ -45,8 +45,8 @@ def ransacF(pts1, pts2, M):
 
     n_inliers_temp = 0
     for pi in range ( ND ):
-      error = np.dot (         pts1_h [ pi , : ].T , 
-              np.dot ( F_est , pts2_h [ pi , : ].T ) )
+      error = np.dot (         pts2_h [ pi , : ].T , 
+              np.dot ( F_est , pts1_h [ pi , : ].T ) )
       error = np.abs ( error )
 
       if error < THRESHOLD:
