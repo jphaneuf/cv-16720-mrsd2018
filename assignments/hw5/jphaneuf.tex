@@ -105,15 +105,34 @@ And the fundamental matrix is $F = K^{-T} E K^{-1}$
 
 \newpage
 \subsection{Q1.4}
-For an object reflected in a mirror (assuming object is parallel to the mirror) , we can imagine a view of the reflection that matches the original object view by translating a virtual camera frame. The virtual camera frame will have to be mirrored, but that's ok.
-Recall that the essential matrix is made up of rotations and translations:
-$E = R \begin{bmatrix} t \end{bmatrix}_{x}$ 
+For an object reflected in a mirror (assuming object is parallel to the mirror) , we can imagine a view of the reflection that matches the original object view by translating a virtual camera frame.  
+In this case, the object at point $p$ viewed in camera frame 1 is equivelant to a point $p'$ in camera frame 2, where camera frame 2 is left handed.
+This yields the following:
+  
+$p_{1}$ = $p_{2}'$  
+  
+$p_{2}$ = $p_{1}'$  
+  
+$p_{2}  F p_{1}' = 0$  
+  
+$p_{2}' F p_{1}  = 0$  
+  
+$p_{1}  F p_{2}' = 0$  
+  
+$p_{1}' F p_{2}  = 0$  
 
-Where $\begin{bmatrix} t \end{bmatrix}_{x}$ is skew symmetric. Since there are no rotations, R is an identity matrix, so the essential matrix is skew symmetric.
-
-Without knowledge of the 3 dimensional environment, we can set up the situation for the fundamental matrix, resulting in two images of the original object related by a skew symmetric fundamental matrix.
-
-
+Substituting yields: 
+  
+$p_{2}' F     p_{2}' = 0$
+  
+$p_{2}' F^{T} p_{2}' = 0$
+  
+$p_{2}' F     p_{2}' + p_{2}' F^{T} p_{2}' = 0$
+  
+$F = -F^{T}$
+  
+Making F skew symmetric.
+  
 \newpage
 \section{Q2}
 \subsection{Q2.1}
@@ -122,10 +141,10 @@ $$
 \begin{bmatrix}
 0.00000133  &  0.0000142  &  -0.21667407 \\
 0.00002237  & -0.00000042 &  0.00017299 \\
-0.20739486  ^ -0.00387777 &   1.         
+0.20739486  & -0.00387777 &   1.         
 \end{bmatrix}
 $$
-The fundamental matrix was used calculate and dras epipolar lines on the second temple image, shown in Figure \ref{fig:fepipolar}.
+The fundamental matrix was used calculate and draw epipolar lines on the second temple image, shown in Figure \ref{fig:fepipolar}.
 
 \begin{figure}[H]
 \centering
@@ -172,8 +191,8 @@ $$
 And the essential matrix calculated from that is:
 $$
 \begin{bmatrix}
-29.02600051   &  310.85741019 & -3051.50532873
-489.65276601  &  -9.28232229  & 98.3519351
+29.02600051   &  310.85741019 & -3051.50532873 \\
+489.65276601  &  -9.28232229  & 98.3519351 \\
 3059.47658236 &    4.49312778 &    1.       
 \end{bmatrix}
 $$
