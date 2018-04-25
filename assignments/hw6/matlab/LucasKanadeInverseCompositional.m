@@ -1,6 +1,6 @@
 function [u,v] = LucasKanadeInverseCompositional(It, It1, rect)
   %Precompute
-  THRESHOLD = 0.01;
+  THRESHOLD = 0.00001;
   It = double ( It );
   It1 = double ( It1 );
   [ h , w ] = size ( It );
@@ -10,7 +10,6 @@ function [u,v] = LucasKanadeInverseCompositional(It, It1, rect)
   x2 = rect ( 3 );
   y2 = rect ( 4 );
 
-  %T  = It ( x1 : x2 , y1 : y2 );
   T  = interp2 ( It , (  x1 : x2 )' , y1 : y2 );
   %eval gradient of template image 
   [ Ix , Iy ] = imgradientxy( T );
@@ -22,16 +21,13 @@ function [u,v] = LucasKanadeInverseCompositional(It, It1, rect)
   % compute steepest descent images gradient ( T ) dw / dp
   steepest = grad_T * dw_dp ;
   H = steepest' * steepest;  % Hessian
-  % compute inverse Hessian
-  % H = sum_x ( \grad ( T ) dw/dp )^T * ( \grad ( T ) dw / dp )
-  %Iterate
   u = 10;
   v = 10;
   p = [ 0 ; 0 ];
+  %Iterate
   for i = 1 : max_iters
     I_W = interp2 ( double ( It1 ) , ((  x1 : x2 ) + p(1) )' , ( y1 : y2 ) + p ( 2 ) );
-     
-    err_image   = reshape ( I_W - T , [ ] , 1 ) ; %reshape ( T , [ ] , 1 );
+    err_image   = reshape ( I_W - T , [ ] , 1 ) ;
     X =  double ( steepest )' * double ( err_image ) ;
     dp = inv ( H ) * X
     p = p - dp;
