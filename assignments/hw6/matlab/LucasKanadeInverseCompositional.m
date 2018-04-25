@@ -1,6 +1,6 @@
 function [u,v] = LucasKanadeInverseCompositional(It, It1, rect)
   %Precompute
-  THRESHOLD = 0.001;
+  THRESHOLD = 0.01;
   It = double ( It );
   It1 = double ( It1 );
   [ h , w ] = size ( It );
@@ -9,9 +9,6 @@ function [u,v] = LucasKanadeInverseCompositional(It, It1, rect)
   y1 = rect ( 2 );
   x2 = rect ( 3 );
   y2 = rect ( 4 );
-  [ X , Y ] = meshgrid( ( x1 : x2 ) , ( y1 : y2 ) );
-  c = cat(2,X',Y');
-  d= reshape( c , [] , 2 );
 
   %T  = It ( x1 : x2 , y1 : y2 );
   T  = interp2 ( It , (  x1 : x2 )' , y1 : y2 );
@@ -32,23 +29,12 @@ function [u,v] = LucasKanadeInverseCompositional(It, It1, rect)
   v = 10;
   p = [ 0 ; 0 ];
   for i = 1 : max_iters
-    %I_warped = imtranslate ( It1 , -p );
-    %I_W = I_warped ( x1 : x2 , y1 : y2 );
-    %x_warped = reshape ( rect , 2 , 2 ) + p;
-    %x_warped = [ x1 : x2 ; y1 : y2 ] + p 
-    
-    I_W = interp2 ( double ( It1 ) , d ( : , 1 ) + p ( 1 ) , d ( : , 2 )  + p ( 2 ) );
-    
-    %x1 = x_warped ( 1 );
-    %y1 = x_warped ( 2 );
-    %x2 = x_warped ( 3 );
-    %y2 = x_warped ( 4 );
+    I_W = interp2 ( double ( It1 ) , ((  x1 : x2 ) + p(1) )' , ( y1 : y2 ) + p ( 2 ) );
      
-    err_image   = I_W - reshape ( T , [ ] , 1 );
-    %err_v = reshape ( err_image , [ ] , 1 );
-    X = bsxfun ( @times , double ( steepest ) , double ( err_image ) ) ;
-    dp = inv ( H ) * sum ( X' , 2);
-    p = p + dp;
+    err_image   = reshape ( I_W - T , [ ] , 1 ) ; %reshape ( T , [ ] , 1 );
+    X =  double ( steepest )' * double ( err_image ) ;
+    dp = inv ( H ) * X
+    p = p - dp;
     if norm ( dp ) ^2 < THRESHOLD
       fprintf ( 'exiting iteration %d' , i );
       break;
