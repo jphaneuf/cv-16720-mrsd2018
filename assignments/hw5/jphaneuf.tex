@@ -105,6 +105,8 @@ And the fundamental matrix is $F = K^{-T} E K^{-1}$
 
 \newpage
 \subsection{Q1.4}
+Literally everybody disagrees on how to prove this, so I'm including two methods...
+\subsubsection{Math}
 For an object reflected in a mirror (assuming object is parallel to the mirror) , we can imagine a view of the reflection that matches the original object view by translating a virtual camera frame.  
 In this case, the object at point $p$ viewed in camera frame 1 is equivelant to a point $p'$ in camera frame 2, where camera frame 2 is left handed.
 This yields the following:
@@ -132,6 +134,15 @@ $p_{2}' F     p_{2}' + p_{2}' F^{T} p_{2}' = 0$
 $F = -F^{T}$
   
 Making F skew symmetric.
+
+\subsubsection{But actually}
+For an object reflected in a mirror (assuming object is parallel to the mirror) , we can imagine a view of the reflection that matches the original object view by translating a virtual camera frame. The virtual camera frame will have to be mirrored (left handed ), but that's ok.
+Recall that the essential matrix is made up of rotations and translations:
+$E = R \begin{bmatrix} t \end{bmatrix}_{x}$ 
+
+Where $\begin{bmatrix} t \end{bmatrix}_{x}$ is skew symmetric. Since there are no rotations, R is an identity matrix, so the essential matrix is skew symmetric.
+Regardless of intrinsic camera matrices, the fundamental matrix will also be skew symmetric.
+
   
 \newpage
 \section{Q2}
