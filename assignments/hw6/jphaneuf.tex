@@ -1,0 +1,60 @@
+\documentclass[12pt]{article}
+\usepackage[english]{babel}
+\usepackage{float}
+\usepackage[margin=1in]{geometry}
+\usepackage{graphicx}
+%\usepackage[toc,page]{appendix}
+\graphicspath{ {./img/} }
+\newcommand{\rpm}{\raisebox{.2ex}{$\scriptstyle\pm$}} 
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{indentfirst}
+\usepackage{caption}
+\usepackage[final]{pdfpages}
+\usepackage{amsmath}
+\usepackage[normalem]{ulem}
+
+
+
+\begin{document}
+
+\title{Joe Phaneuf \\ Computer Vision 16-720 Spring 2018 Homework 6 \\ Apr. 28 2018 }
+\date{}
+\author{}
+\maketitle
+
+\newpage
+
+
+%\stepcounter{section}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Q1}
+\subsection{Q1.1}
+For Lucas-Kanade Tracking, we aim to iteratively compute an optimal image transformation. At each iteration, the optimal change in transform parameters $\Delta p$ is found by linearization as seen in equation \ref{eq:iteration}.
+
+\begin{equation}
+\label{eq:iteration}
+\Delta p ^{*} = argmin_{\Delta p} \sum_{x}
+\begin{bmatrix}
+\nabla I \frac { \partial W } { \partial p } \Delta p - \{ T ( x ) - I ( W ( x ; p ) ) \}
+\end{bmatrix}^{2}
+\end{equation}
+
+Where $I$ is a target image, $\nabla I$ is the image gradient, $W$ is the image transformation function, $\frac{ \partial W } { \partial p }$ is the Jacobian representing the change in pixel position with respect to transform parameters $p$, and $T$ is the template image.
+
+Equation \ref{eq:iteration} can be set up in normal equation form $argmin_{\Delta p} || A \Delta p - b ||_{2}^{2}$ where $A$ and $b$ are:
+\begin{equation}
+\label{eq:A}
+A =
+\nabla I \frac { \partial W } { \partial p }
+\end{equation}
+\begin{equation}
+\label{eq:A}
+b = T ( x ) - I ( W ( x ; p ) )
+\end{equation}
+
+This method banks on a few assumptions to obtain a unique $\Delta p$. First, $A^{T} A$ must be invertible for a solution to be obtained. Also, the eigen values of $A^{T} A$, $\lambda_{1}$ and $\lambda_{2}$, must be sufficiently large, and well conditioned ( $\lambda_{1}$ not significantly larger than $\lambda_{2}$ ). In human terms, this corresponds to the existence of corners in the the image, which allows for tracking.
+
+
+\end{document}
