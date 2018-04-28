@@ -29,10 +29,10 @@ function [u,v] = LucasKanadeInverseCompositional(It, It1, rect)
     I_W = interp2 ( double ( It1 ) , ((  x1 : x2 ) + p(1) )' , ( y1 : y2 ) + p ( 2 ) );
     err_image   = reshape ( I_W - T , [ ] , 1 ) ;
     X =  double ( steepest )' * double ( err_image ) ;
-    dp = inv ( H ) * X
+    dp = inv ( H ) * X;
     p = p - dp;
     if norm ( dp ) ^2 < THRESHOLD
-      fprintf ( 'exiting iteration %d' , i );
+      %fprintf ( 'exiting iteration %d' , i );
       break;
     end
   end
