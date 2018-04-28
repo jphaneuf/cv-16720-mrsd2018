@@ -2,7 +2,7 @@ function M = LucasKanadeAffine(It, It1)
 % input - image at time t, image at t+1 
 % output - M affine transformation matrix
   %Precompute
-  THRESHOLD = 0.00001;
+  THRESHOLD = 0.000001;
   [ h , w ] = size ( It );
   It  = double ( It );
   It1 = double ( It1 );
