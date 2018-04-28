@@ -56,7 +56,8 @@ b = T ( x ) - I ( W ( x ; p ) )
 
 This method banks on a few assumptions to obtain a unique $\Delta p$. First, $A^{T} A$ must be invertible for a solution to be obtained. Also, the eigen values of $A^{T} A$, $\lambda_{1}$ and $\lambda_{2}$, must be sufficiently large, and well conditioned ( $\lambda_{1}$ not significantly larger than $\lambda_{2}$ ). In human terms, this corresponds to the existence of corners in the the image, which allows for tracking.
 
-\subsection{Q1.2}
+\stepcounter{subsection}
+\subsection{Q1.3}
 
 Figure \ref{fig:suv} shows the resulting tracking bounding box following an SUV using the Lucas Kanade Inverse Compositional Algorithm. The SUV is tracked reasonably well across the image sequence.
 
@@ -77,5 +78,38 @@ Figure \ref{fig:usvessel} shows the resulting bounding box following an SUV usin
 \end{figure}   
 
 
+\section{Q2}
+\subsection{Q2.1}
+The appearance variation of a new frame can be approximated as a linear combination of the previous frame with a set of bases weighted by $\textbf{w}$ ( equation \ref{eq:w} ), with eacth weight $w_{k}$ is found using equation \ref{eq:wk}.
+
+\begin{equation}
+\label{eq:w}
+\textbf { w } =
+\begin{bmatrix}
+w_{k}, ... , w_{K}
+\end{bmatrix}
+\end{equation}
+
+\begin{equation}
+\label{eq:wk}
+w_{k}  = 
+\sum_{x} B_{k} ( x )
+\begin {bmatrix}
+I ( W ( x ; p ) ) - T ( x )
+\end {bmatrix}
+\end{equation}
+
+\stepcounter{subsection}
+\subsection{Q2.3}
+Figure \ref{fig:sylv} shows Sylvester the cat's head being tracked by both the Lucas Kanade Inverse Compositional algorithm ( red  bounding box ), as well as the Appearance Basis variant(blue bounding box) at frames 1, 200, 300, 350 and 400. Both algorithms track Sylvester's head well.
+\begin{figure}[H]
+\centering
+\includegraphics[page=1,width=1.0\textwidth]{q23}
+\caption{ Sylvesters' head tracking: inverse compositional is red , basis is blue } 
+\label{fig:sylv}
+\end{figure}   
+
+\section{Q3}
+\subsection{Q3.1}
 
 \end{document}
