@@ -5,6 +5,7 @@ function  [ ] = testCarSequence( )
   load ( '../data/carseq.mat' )   ;
   n_frames = size ( frames , 3 )  ;
   rect = [ 60 ; 117 ; 146 ; 152 ]; % Init bounding box
+  rects = [ rect' ] ;
   test_frames = [ 1 , 100 , 200 , 300 , 400 ];
   n_test_frames = numel ( test_frames );
   for i = 1 : n_frames - 1
@@ -17,13 +18,14 @@ function  [ ] = testCarSequence( )
                                                 frames ( : , : , i + 1 ) ,  ...
                                                 rect                       );
     rect = rect + [ u ; v ; u ; v ];
-    pause ( 0.01 );
+    rects = [ rects ; rect' ] ;
+    %pause ( 0.01 );
     if ismember ( i , test_frames )
-      plot_i = find ( test_frames == i );
+      plot_i = find ( test_frames == i  );
       subplot ( 1 , n_test_frames , plot_i );
       imshow ( frames ( : , : , i ) );
       rectangle ( 'Position' , [ x , y , w , h ]  );
     end
   end
-  %[u,v] = LucasKanadeInverseCompositional(It, It1, rect)
+  save ( '../data/carseqrects.mat' , 'rects' );
 end

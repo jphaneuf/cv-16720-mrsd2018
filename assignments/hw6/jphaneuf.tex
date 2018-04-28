@@ -56,5 +56,26 @@ b = T ( x ) - I ( W ( x ; p ) )
 
 This method banks on a few assumptions to obtain a unique $\Delta p$. First, $A^{T} A$ must be invertible for a solution to be obtained. Also, the eigen values of $A^{T} A$, $\lambda_{1}$ and $\lambda_{2}$, must be sufficiently large, and well conditioned ( $\lambda_{1}$ not significantly larger than $\lambda_{2}$ ). In human terms, this corresponds to the existence of corners in the the image, which allows for tracking.
 
+\subsection{Q1.2}
+
+Figure \ref{fig:suv} shows the resulting tracking bounding box following an SUV using the Lucas Kanade Inverse Compositional Algorithm. The SUV is tracked reasonably well across the image sequence.
+
+\begin{figure}[H]
+\centering
+\includegraphics[page=1,width=1.0\textwidth]{q13_suv}
+\caption{ SUV tracked at frames 1 , 100 , 200 , 300 , 400 } 
+\label{fig:suv}
+\end{figure}   
+
+Figure \ref{fig:usvessel} shows the resulting bounding box following an SUV using the same algorithm tracking a beating heart vessel. This algorithm has more trouble tracking the vessel, which has fewer trackable  features than the SUV.
+
+\begin{figure}[H]
+\centering
+\includegraphics[page=1,width=1.0\textwidth]{q13_us}
+\caption{ Beating vessel tracked at frames 5 , 25 , 50 , 75 , 100 } 
+\label{fig:usvessel}
+\end{figure}   
+
+
 
 \end{document}
