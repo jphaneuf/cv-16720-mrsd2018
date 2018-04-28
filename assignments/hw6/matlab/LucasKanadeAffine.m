@@ -58,7 +58,7 @@ function M = LucasKanadeAffine(It, It1)
     M = M ( 1:2 , : );
     %p = p ( 1:2 , : )
     if norm ( dp ) ^2 < THRESHOLD
-      fprintf ( 'exiting iteration %d' , i );
+      %fprintf ( 'exiting iteration %d' , i );
       break;
     end
   end

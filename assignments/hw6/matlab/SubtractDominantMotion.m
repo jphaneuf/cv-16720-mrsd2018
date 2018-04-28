@@ -27,6 +27,7 @@ function mask = SubtractDominantMotion(image1, image2)
   output_image = ( output_image - m ).^2;
   
   output_image = output_image / max ( max ( output_image ) );
+  output_image ( isnan ( output_image ) ) = 0;
   for i = 1:1
     output_image = imdilate ( output_image , strel('disk', 6 ) );
     output_image = imerode ( output_image , strel('disk', 3 ) );
