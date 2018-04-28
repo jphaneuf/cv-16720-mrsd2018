@@ -23,17 +23,17 @@ function mask = SubtractDominantMotion(image1, image2)
   output_image ( :  , 1:buffer ) = 0;
   output_image ( :  , (w-buffer):w ) = 0;
   m = mean ( mean ( output_image ) );
-  h = fspecial('prewitt' );
+  %h = fspecial('prewitt' );
   output_image = ( output_image - m ).^2;
   
   output_image = output_image / max ( max ( output_image ) );
-  se = strel('disk', 5);
-  for i = 1:10
-    output_image = imdilate ( output_image , se );
-    output_image = imerode ( output_image , se );
+  for i = 1:1
+    output_image = imdilate ( output_image , strel('disk', 6 ) );
+    output_image = imerode ( output_image , strel('disk', 3 ) );
   end
   output_image = im2bw  (output_image , 0.1);
-  output_image = bwareaopen(output_image, 50);
+  %output_image = bwareaopen(output_image, 50);
+  output_image = bwareaopen(output_image, 20);
   mask = output_image;
   %imshow ( output_image , [ ] );
   %pause ( 0.1 );
