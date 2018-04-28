@@ -17,7 +17,7 @@ function  [ ] = testUSSequenceAffine( )
     %fuck_rect = [ x , y , w , h ];
     %rectangle ( 'Position' , [ x , y , w , h ]  );
     [ M ] = LucasKanadeAffine( frames ( : , : , i     ) ,  ...
-                                  frames ( : , : , i + 1 ) )
+                                  frames ( : , : , i + 1 ) );
     pause ( 0.01 )
   end
   %[u,v] = LucasKanadeInverseCompositional(It, It1, rect)
